@@ -2,6 +2,10 @@
 
 Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
 
+Hi my name is Bob\! Bob, the Babolina.
+
+/
+
 - Guide pages
 - Navigation
 - Customizations
