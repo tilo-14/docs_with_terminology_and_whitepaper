@@ -1,0 +1,694 @@
+---
+title: "SDK Methods"
+description: "Complete TypeScript SDK reference for ZK Compression"
+---
+
+## Overview
+
+The ZK Compression TypeScript SDK provides a high-level interface for interacting with compressed state on Solana. This reference covers all available methods and their usage.
+
+## Installation
+
+```bash
+npm install @lightprotocol/zk-compression-sdk
+```
+
+## Initialization
+
+```typescript
+import { ZkCompressionSDK } from "@lightprotocol/zk-compression-sdk";
+import { Connection, Keypair } from "@solana/web3.js";
+
+const connection = new Connection("https://api.devnet.solana.com");
+const payer = Keypair.fromSecretKey(/* your secret key */);
+
+const sdk = new ZkCompressionSDK({
+  connection,
+  payer,
+});
+```
+
+## Token Operations
+
+### createMint
+
+Create a new compressed token mint.
+
+```typescript
+async function createMint(params: {
+  connection: Connection;
+  payer: Keypair;
+  mintAuthority: PublicKey;
+  freezeAuthority?: PublicKey;
+  decimals: number;
+  tree?: PublicKey;
+}): Promise<PublicKey>;
+```
+
+**Parameters:**
+
+- `connection`: Solana RPC connection
+- `payer`: Transaction fee payer
+- `mintAuthority`: Authority that can mint tokens
+- `freezeAuthority`: Authority that can freeze accounts (optional)
+- `decimals`: Number of decimal places for the token
+- `tree`: Specific Merkle tree to use (optional)
+
+**Example:**
+
+```typescript
+const mint = await createMint({
+  connection,
+  payer,
+  mintAuthority: payer.publicKey,
+  decimals: 9,
+});
+
+console.log("Created mint:", mint.toBase58());
+```
+
+### mintTo
+
+Mint compressed tokens to an account.
+
+```typescript
+async function mintTo(params: {
+  connection: Connection;
+  payer: Keypair;
+  mint: PublicKey;
+  destination: PublicKey;
+  authority: Keypair;
+  amount: number;
+  tree?: PublicKey;
+}): Promise<string>;
+```
+
+**Parameters:**
+
+- `connection`: Solana RPC connection
+- `payer`: Transaction fee payer
+- `mint`: The mint address
+- `destination`: Recipient's public key
+- `authority`: Mint authority keypair
+- `amount`: Amount to mint (in lamports)
+- `tree`: Specific Merkle tree to use (optional)
+
+**Example:**
+
+```typescript
+const signature = await mintTo({
+  connection,
+  payer,
+  mint,
+  destination: payer.publicKey,
+  authority: payer,
+  amount: 1000 * 10 ** 9, // 1000 tokens
+});
+
+console.log("Minted tokens:", signature);
+```
+
+### transfer
+
+Transfer compressed tokens between accounts.
+
+```typescript
+async function transfer(params: {
+  connection: Connection;
+  payer: Keypair;
+  mint: PublicKey;
+  from: PublicKey;
+  to: PublicKey;
+  authority: Keypair;
+  amount: number;
+  tree?: PublicKey;
+}): Promise<string>;
+```
+
+**Parameters:**
+
+- `connection`: Solana RPC connection
+- `payer`: Transaction fee payer
+- `mint`: The mint address
+- `from`: Sender's public key
+- `to`: Recipient's public key
+- `authority`: Transfer authority keypair
+- `amount`: Amount to transfer (in lamports)
+- `tree`: Specific Merkle tree to use (optional)
+
+**Example:**
+
+```typescript
+const recipient = Keypair.generate();
+
+const signature = await transfer({
+  connection,
+  payer,
+  mint,
+  from: payer.publicKey,
+  to: recipient.publicKey,
+  authority: payer,
+  amount: 100 * 10 ** 9, // 100 tokens
+});
+
+console.log("Transferred tokens:", signature);
+```
+
+### burn
+
+Burn compressed tokens.
+
+```typescript
+async function burn(params: {
+  connection: Connection;
+  payer: Keypair;
+  mint: PublicKey;
+  owner: PublicKey;
+  authority: Keypair;
+  amount: number;
+  tree?: PublicKey;
+}): Promise<string>;
+```
+
+**Example:**
+
+```typescript
+const signature = await burn({
+  connection,
+  payer,
+  mint,
+  owner: payer.publicKey,
+  authority: payer,
+  amount: 50 * 10 ** 9, // 50 tokens
+});
+
+console.log("Burned tokens:", signature);
+```
+
+## Batch Operations
+
+### batchTransfer
+
+Transfer tokens to multiple recipients in a single transaction.
+
+```typescript
+async function batchTransfer(params: {
+  connection: Connection;
+  payer: Keypair;
+  mint: PublicKey;
+  from: PublicKey;
+  authority: Keypair;
+  transfers: Array<{
+    destination: PublicKey;
+    amount: number;
+  }>;
+  tree?: PublicKey;
+}): Promise<string>;
+```
+
+**Example:**
+
+```typescript
+const transfers = [
+  { destination: recipient1.publicKey, amount: 100 * 10 ** 9 },
+  { destination: recipient2.publicKey, amount: 200 * 10 ** 9 },
+  { destination: recipient3.publicKey, amount: 150 * 10 ** 9 },
+];
+
+const signature = await batchTransfer({
+  connection,
+  payer,
+  mint,
+  from: payer.publicKey,
+  authority: payer,
+  transfers,
+});
+
+console.log("Batch transfer completed:", signature);
+```
+
+### batchMintTo
+
+Mint tokens to multiple accounts in a single transaction.
+
+```typescript
+async function batchMintTo(params: {
+  connection: Connection;
+  payer: Keypair;
+  mint: PublicKey;
+  authority: Keypair;
+  destinations: Array<{
+    account: PublicKey;
+    amount: number;
+  }>;
+  tree?: PublicKey;
+}): Promise<string>;
+```
+
+**Example:**
+
+```typescript
+const destinations = [
+  { account: account1.publicKey, amount: 1000 * 10 ** 9 },
+  { account: account2.publicKey, amount: 2000 * 10 ** 9 },
+  { account: account3.publicKey, amount: 1500 * 10 ** 9 },
+];
+
+const signature = await batchMintTo({
+  connection,
+  payer,
+  mint,
+  authority: payer,
+  destinations,
+});
+
+console.log("Batch mint completed:", signature);
+```
+
+## Query Methods
+
+### getCompressedTokenBalance
+
+Get the compressed token balance for a specific owner and mint.
+
+```typescript
+async function getCompressedTokenBalance(params: {
+  connection: Connection;
+  mint: PublicKey;
+  owner: PublicKey;
+  commitment?: Commitment;
+}): Promise<number>;
+```
+
+**Example:**
+
+```typescript
+const balance = await getCompressedTokenBalance({
+  connection,
+  mint,
+  owner: payer.publicKey,
+});
+
+console.log(`Balance: ${balance / 10 ** 9} tokens`);
+```
+
+### getCompressedTokenAccountsByOwner
+
+Get all compressed token accounts owned by a specific address.
+
+```typescript
+async function getCompressedTokenAccountsByOwner(params: {
+  connection: Connection;
+  owner: PublicKey;
+  mint?: PublicKey;
+  commitment?: Commitment;
+}): Promise<CompressedTokenAccount[]>;
+```
+
+**Example:**
+
+```typescript
+const accounts = await getCompressedTokenAccountsByOwner({
+  connection,
+  owner: payer.publicKey,
+});
+
+console.log(`Found ${accounts.length} token accounts`);
+accounts.forEach((account, index) => {
+  console.log(`Account ${index + 1}:`);
+  console.log(`  Mint: ${account.mint}`);
+  console.log(`  Amount: ${account.amount}`);
+});
+```
+
+### getCompressedTokenAccountsByMint
+
+Get all compressed token accounts for a specific mint.
+
+```typescript
+async function getCompressedTokenAccountsByMint(params: {
+  connection: Connection;
+  mint: PublicKey;
+  commitment?: Commitment;
+  limit?: number;
+}): Promise<CompressedTokenAccount[]>;
+```
+
+**Example:**
+
+```typescript
+const accounts = await getCompressedTokenAccountsByMint({
+  connection,
+  mint,
+  limit: 100,
+});
+
+console.log(`Found ${accounts.length} accounts for mint`);
+```
+
+## Merkle Tree Operations
+
+### createMerkleTree
+
+Create a new Merkle tree for compressed accounts.
+
+```typescript
+async function createMerkleTree(params: {
+  connection: Connection;
+  payer: Keypair;
+  maxDepth: number;
+  maxBufferSize: number;
+  canopyDepth?: number;
+  authority?: PublicKey;
+}): Promise<PublicKey>;
+```
+
+**Example:**
+
+```typescript
+const tree = await createMerkleTree({
+  connection,
+  payer,
+  maxDepth: 30,
+  maxBufferSize: 64,
+  canopyDepth: 14,
+});
+
+console.log("Created Merkle tree:", tree.toBase58());
+```
+
+### getMerkleTreeInfo
+
+Get information about a Merkle tree.
+
+```typescript
+async function getMerkleTreeInfo(params: {
+  connection: Connection;
+  tree: PublicKey;
+  commitment?: Commitment;
+}): Promise<MerkleTreeInfo>;
+```
+
+**Example:**
+
+```typescript
+const treeInfo = await getMerkleTreeInfo({
+  connection,
+  tree,
+});
+
+console.log("Tree info:", {
+  maxDepth: treeInfo.maxDepth,
+  accountCount: treeInfo.accountCount,
+  maxAccounts: treeInfo.maxAccounts,
+});
+```
+
+### getMerkleProof
+
+Get a Merkle proof for a specific account.
+
+```typescript
+async function getMerkleProof(params: {
+  connection: Connection;
+  tree: PublicKey;
+  accountHash: string;
+  commitment?: Commitment;
+}): Promise<MerkleProof>;
+```
+
+**Example:**
+
+```typescript
+const proof = await getMerkleProof({
+  connection,
+  tree,
+  accountHash: "account-hash-here",
+});
+
+console.log("Merkle proof:", {
+  root: proof.root,
+  leafIndex: proof.leafIndex,
+  proofLength: proof.proof.length,
+});
+```
+
+## Metadata Operations
+
+### createMintWithMetadata
+
+Create a compressed token mint with metadata.
+
+```typescript
+async function createMintWithMetadata(params: {
+  connection: Connection;
+  payer: Keypair;
+  mintAuthority: PublicKey;
+  decimals: number;
+  metadata: {
+    name: string;
+    symbol: string;
+    uri: string;
+    sellerFeeBasisPoints: number;
+    creators: Array<{
+      address: PublicKey;
+      verified: boolean;
+      share: number;
+    }>;
+  };
+  tree?: PublicKey;
+}): Promise<PublicKey>;
+```
+
+**Example:**
+
+```typescript
+const mint = await createMintWithMetadata({
+  connection,
+  payer,
+  mintAuthority: payer.publicKey,
+  decimals: 9,
+  metadata: {
+    name: "My Compressed Token",
+    symbol: "MCT",
+    uri: "https://example.com/metadata.json",
+    sellerFeeBasisPoints: 500,
+    creators: [
+      {
+        address: payer.publicKey,
+        verified: true,
+        share: 100,
+      },
+    ],
+  },
+});
+
+console.log("Created mint with metadata:", mint.toBase58());
+```
+
+### getTokenMetadata
+
+Get metadata for a compressed token.
+
+```typescript
+async function getTokenMetadata(params: {
+  connection: Connection;
+  mint: PublicKey;
+  commitment?: Commitment;
+}): Promise<TokenMetadata>;
+```
+
+**Example:**
+
+```typescript
+const metadata = await getTokenMetadata({
+  connection,
+  mint,
+});
+
+console.log("Token metadata:", {
+  name: metadata.name,
+  symbol: metadata.symbol,
+  uri: metadata.uri,
+});
+```
+
+## Utility Methods
+
+### verifyMerkleProof
+
+Verify a Merkle proof.
+
+```typescript
+async function verifyMerkleProof(params: {
+  leaf: string;
+  proof: string[];
+  root: string;
+}): Promise<boolean>;
+```
+
+**Example:**
+
+```typescript
+const isValid = await verifyMerkleProof({
+  leaf: "leaf-hash",
+  proof: ["proof-node-1", "proof-node-2"],
+  root: "root-hash",
+});
+
+console.log("Proof is valid:", isValid);
+```
+
+### compressAccount
+
+Compress an existing Solana account.
+
+```typescript
+async function compressAccount(params: {
+  connection: Connection;
+  payer: Keypair;
+  account: PublicKey;
+  tree: PublicKey;
+}): Promise<string>;
+```
+
+**Example:**
+
+```typescript
+const signature = await compressAccount({
+  connection,
+  payer,
+  account: existingAccount,
+  tree,
+});
+
+console.log("Account compressed:", signature);
+```
+
+### decompressAccount
+
+Decompress a compressed account back to regular Solana account.
+
+```typescript
+async function decompressAccount(params: {
+  connection: Connection;
+  payer: Keypair;
+  accountHash: string;
+  tree: PublicKey;
+}): Promise<string>;
+```
+
+**Example:**
+
+```typescript
+const signature = await decompressAccount({
+  connection,
+  payer,
+  accountHash: "compressed-account-hash",
+  tree,
+});
+
+console.log("Account decompressed:", signature);
+```
+
+## Error Handling
+
+The SDK throws specific error types for different scenarios:
+
+```typescript
+import {
+  CompressionError,
+  InsufficientBalanceError,
+  InvalidProofError,
+  TreeFullError,
+} from "@lightprotocol/zk-compression-sdk";
+
+try {
+  await transfer({
+    connection,
+    payer,
+    mint,
+    from: payer.publicKey,
+    to: recipient.publicKey,
+    authority: payer,
+    amount: 1000 * 10 ** 9,
+  });
+} catch (error) {
+  if (error instanceof InsufficientBalanceError) {
+    console.error("Insufficient balance for transfer");
+  } else if (error instanceof InvalidProofError) {
+    console.error("Invalid Merkle proof");
+  } else if (error instanceof TreeFullError) {
+    console.error("Merkle tree is full");
+  } else {
+    console.error("Unknown error:", error);
+  }
+}
+```
+
+## Type Definitions
+
+### CompressedTokenAccount
+
+```typescript
+interface CompressedTokenAccount {
+  accountHash: string;
+  mint: PublicKey;
+  owner: PublicKey;
+  amount: number;
+  state: "active" | "frozen";
+  tree: PublicKey;
+}
+```
+
+### MerkleTreeInfo
+
+```typescript
+interface MerkleTreeInfo {
+  maxDepth: number;
+  maxBufferSize: number;
+  canopyDepth: number;
+  accountCount: number;
+  maxAccounts: number;
+  root: string;
+  authority: PublicKey;
+}
+```
+
+### MerkleProof
+
+```typescript
+interface MerkleProof {
+  proof: string[];
+  root: string;
+  leaf: string;
+  leafIndex: number;
+}
+```
+
+### TokenMetadata
+
+```typescript
+interface TokenMetadata {
+  name: string;
+  symbol: string;
+  uri: string;
+  sellerFeeBasisPoints: number;
+  creators: Array<{
+    address: PublicKey;
+    verified: boolean;
+    share: number;
+  }>;
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="FAQ" icon="circle-question" href="/help/faq">
+    Find answers to common questions
+  </Card>
+  <Card title="Community" icon="users" href="/help/community">
+    Join the ZK Compression community
+  </Card>
+</CardGroup>{" "}

@@ -1,0 +1,125 @@
+---
+title: "Setup"
+description: "Get your development environment ready for ZK Compression"
+---
+
+## Prerequisites
+
+Before getting started with ZK Compression, make sure you have:
+
+- **Node.js** (v16 or higher)
+- **Solana CLI** tools installed
+- **Basic Solana development** knowledge
+- **TypeScript/JavaScript** familiarity
+
+## Installation
+
+### 1. Install the ZK Compression SDK
+
+```bash
+npm install @lightprotocol/zk-compression-sdk
+# or
+yarn add @lightprotocol/zk-compression-sdk
+```
+
+### 2. Install Solana Dependencies
+
+```bash
+npm install @solana/web3.js @solana/spl-token
+```
+
+### 3. Set up your Solana Environment
+
+Configure your Solana CLI for development:
+
+```bash
+# Set to devnet for testing
+solana config set --url devnet
+
+# Create a new keypair (if you don't have one)
+solana-keygen new --outfile ~/.config/solana/id.json
+
+# Get some devnet SOL for testing
+solana airdrop 2
+```
+
+## Basic Setup
+
+### Initialize your project
+
+Create a new project and set up the basic structure:
+
+```typescript
+import { Connection, Keypair } from "@solana/web3.js";
+import { ZkCompressionSDK } from "@lightprotocol/zk-compression-sdk";
+
+// Initialize connection
+const connection = new Connection("https://api.devnet.solana.com");
+
+// Load your keypair
+const payer = Keypair.fromSecretKey(
+  new Uint8Array(JSON.parse(process.env.SOLANA_PRIVATE_KEY!))
+);
+
+// Initialize ZK Compression SDK
+const zkCompression = new ZkCompressionSDK({
+  connection,
+  payer,
+});
+```
+
+### Environment Variables
+
+Create a `.env` file in your project root:
+
+```bash
+SOLANA_PRIVATE_KEY="[1,2,3,...]"  # Your keypair as JSON array
+RPC_URL="https://api.devnet.solana.com"
+```
+
+## Verification
+
+Test your setup with this simple verification script:
+
+```typescript
+async function verifySetup() {
+  try {
+    // Check connection
+    const version = await connection.getVersion();
+    console.log("✅ Connected to Solana:", version);
+
+    // Check balance
+    const balance = await connection.getBalance(payer.publicKey);
+    console.log("✅ Wallet balance:", balance / 1e9, "SOL");
+
+    // Initialize ZK Compression
+    await zkCompression.initialize();
+    console.log("✅ ZK Compression SDK initialized");
+  } catch (error) {
+    console.error("❌ Setup verification failed:", error);
+  }
+}
+
+verifySetup();
+```
+
+## Next Steps
+
+Now that your environment is set up, you're ready to start building with ZK Compression!
+
+<CardGroup cols={2}>
+  <Card
+    title="Mint & Send Demo"
+    icon="coins"
+    href="/quickstart/mint-and-send-demo"
+  >
+    Try your first compressed token operations
+  </Card>
+  <Card
+    title="View & Verify"
+    icon="magnifying-glass"
+    href="/next-steps/view-and-verify"
+  >
+    Learn how to query compressed state
+  </Card>
+</CardGroup>{" "}

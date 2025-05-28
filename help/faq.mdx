@@ -1,0 +1,301 @@
+---
+title: "FAQ"
+description: "Frequently asked questions about ZK Compression"
+---
+
+## General Questions
+
+<Accordion title="What is ZK Compression?">
+  ZK Compression is a primitive that enables developers to build applications on
+  Solana with massively reduced state costs. By leveraging zero-knowledge
+  proofs, it compresses on-chain state while maintaining the security,
+  composability, and performance characteristics of the Solana network.
+</Accordion>
+
+<Accordion title="How much can I save with ZK Compression?">
+  ZK Compression can reduce state costs by orders of magnitude - typically 1000x
+  or more compared to regular Solana accounts. The exact savings depend on your
+  use case, but most applications see dramatic cost reductions.
+</Accordion>
+
+<Accordion title="Is ZK Compression secure?">
+  Yes, ZK Compression maintains the same security guarantees as regular Solana
+  state. It uses cryptographic proofs to ensure state integrity and validity,
+  with no compromise on security.
+</Accordion>
+
+<Accordion title="Can compressed state interact with regular Solana programs?">
+  Yes, compressed state is fully composable with regular Solana programs. You
+  can build applications that seamlessly interact with both compressed and
+  uncompressed state.
+</Accordion>
+
+<Accordion title="What's the performance impact of using ZK Compression?">
+  ZK Compression maintains native Solana performance. Transactions process at
+  the same speed, and there's no compromise on throughput. The main difference
+  is dramatically reduced costs.
+</Accordion>
+
+## Technical Questions
+
+<Accordion title="How do Merkle trees work in ZK Compression?">
+Merkle trees are used to organize compressed state efficiently. Instead of storing full account data on-chain, only the Merkle root is stored. This allows for efficient proofs of inclusion and state updates while dramatically reducing storage costs.
+
+Key concepts:
+
+- **Merkle Root**: A single hash representing the entire tree state
+- **Merkle Proof**: A path of hashes proving an account exists in the tree
+- **Leaf Nodes**: Individual compressed accounts
+- **Canopy**: Cached proof nodes for faster operations
+  </Accordion>
+
+<Accordion title="What happens if a Merkle tree becomes full?">
+When a Merkle tree approaches capacity, you have several options:
+
+1. **Create a new tree**: Most applications use multiple trees
+2. **Increase tree depth**: Configure larger trees from the start
+3. **Archive old data**: Move inactive accounts to archive trees
+4. **Tree rotation**: Implement automatic tree switching
+
+The SDK provides tools to manage tree capacity automatically.
+
+</Accordion>
+
+<Accordion title="How are zero-knowledge proofs used?">
+Zero-knowledge proofs in ZK Compression serve to:
+
+1. **Prove state validity**: Ensure state transitions are valid without revealing data
+2. **Verify inclusion**: Prove an account exists in a Merkle tree
+3. **Maintain privacy**: Keep sensitive data off-chain while proving correctness
+4. **Enable batching**: Process multiple operations efficiently
+
+The proofs are generated automatically by the SDK.
+
+</Accordion>
+
+<Accordion title="What's the difference between compressed and regular tokens?">
+  | Aspect | Regular SPL Tokens | Compressed Tokens |
+  |--------|-------------------|-------------------| | **Storage Cost** | ~0.002
+  SOL per account | ~0.000001 SOL per account | | **Performance** | Native speed
+  | Native speed | | **Composability** | Full | Full | | **Querying** | Direct
+  RPC calls | Indexer required | | **Proof Requirements** | None | Merkle proofs
+  | | **Scalability** | Limited by rent costs | Virtually unlimited |
+</Accordion>
+
+## Development Questions
+
+<Accordion title="How do I get started with ZK Compression?">
+Follow these steps:
+
+1. **Install the SDK**: `npm install @lightprotocol/zk-compression-sdk`
+2. **Set up your environment**: Configure Solana CLI and get devnet SOL
+3. **Follow the quickstart**: Complete our [setup guide](/quickstart/setup)
+4. **Try the demo**: Run the [mint & send demo](/quickstart/mint-and-send-demo)
+5. **Build your app**: Use our guides and API reference
+
+Check out our [quickstart guide](/quickstart/setup) for detailed instructions.
+
+</Accordion>
+
+<Accordion title="Which RPC providers support ZK Compression?">
+ZK Compression requires RPC providers with indexing support for compressed state. Supported providers include:
+
+- **Helius**: Full support with dedicated compression endpoints
+- **QuickNode**: Compression indexing available
+- **Triton**: Supports compression queries
+- **Custom indexers**: You can run your own indexer
+
+For development, use providers with compression indexing enabled.
+
+</Accordion>
+
+<Accordion title="How do I query compressed state?">
+Querying compressed state requires indexers since the data isn't directly stored on-chain:
+
+```typescript
+// Get compressed token balance
+const balance = await getCompressedTokenBalance({
+  connection,
+  mint,
+  owner: userPublicKey,
+});
+
+// Get all compressed accounts for a user
+const accounts = await getCompressedTokenAccountsByOwner({
+  connection,
+  owner: userPublicKey,
+});
+```
+
+See our [View & Verify guide](/next-steps/view-and-verify) for more details.
+
+</Accordion>
+
+<Accordion title="Can I migrate existing tokens to compressed format?">
+Yes, you can migrate existing SPL tokens to compressed format:
+
+1. **Create compressed mint**: Set up a new compressed token mint
+2. **Burn regular tokens**: Burn the original SPL tokens
+3. **Mint compressed tokens**: Mint equivalent compressed tokens
+4. **Update metadata**: Ensure metadata consistency
+
+This process requires careful planning to maintain token supply and user balances.
+
+</Accordion>
+
+<Accordion title="How do I handle errors in ZK Compression?">
+The SDK provides specific error types for different scenarios:
+
+```typescript
+import {
+  InsufficientBalanceError,
+  InvalidProofError,
+  TreeFullError,
+} from "@lightprotocol/zk-compression-sdk";
+
+try {
+  await transfer(/* params */);
+} catch (error) {
+  if (error instanceof InsufficientBalanceError) {
+    // Handle insufficient balance
+  } else if (error instanceof InvalidProofError) {
+    // Handle proof verification failure
+  } else if (error instanceof TreeFullError) {
+    // Handle tree capacity issues
+  }
+}
+```
+
+</Accordion>
+
+## Scaling Questions
+
+<Accordion title="How many accounts can a single Merkle tree hold?">
+The number of accounts depends on the tree depth:
+
+- **Depth 20**: ~1 million accounts
+- **Depth 25**: ~33 million accounts
+- **Depth 30**: ~1 billion accounts
+
+Most applications use depth 30 trees for maximum capacity. You can also use multiple trees for horizontal scaling.
+
+</Accordion>
+
+<Accordion title="How do I optimize for high throughput?">
+For high-throughput applications:
+
+1. **Use batch operations**: Process multiple transfers in single transactions
+2. **Implement parallel processing**: Use multiple workers for concurrent operations
+3. **Optimize tree configuration**: Use appropriate depth and canopy settings
+4. **Cache frequently accessed data**: Reduce RPC calls with intelligent caching
+5. **Rate limit appropriately**: Respect RPC provider limits
+
+See our [scaling guide](/next-steps/scale) for detailed optimization strategies.
+
+</Accordion>
+
+<Accordion title="What are the network requirements?">
+ZK Compression works on:
+
+- **Mainnet**: Full production support
+- **Devnet**: For development and testing
+- **Testnet**: For staging environments
+- **Localnet**: For local development
+
+No special network configuration is required beyond standard Solana setup.
+
+</Accordion>
+
+## Cost Questions
+
+<Accordion title="What are the exact cost savings?">
+Cost comparison for 1 million token accounts:
+
+**Regular SPL Tokens:**
+
+- Account rent: 1,000,000 × 0.002 SOL = 2,000 SOL
+- At $100/SOL = $200,000
+
+**Compressed Tokens:**
+
+- Tree creation: ~0.1 SOL
+- Account storage: ~1 SOL total
+- Total: ~1.1 SOL = $110
+
+**Savings: 99.95% cost reduction**
+
+</Accordion>
+
+<Accordion title="Are there any hidden costs?">
+The main costs with ZK Compression are:
+
+1. **Tree creation**: One-time cost per Merkle tree (~0.1 SOL)
+2. **Transaction fees**: Standard Solana transaction fees
+3. **Indexing**: If running your own indexer (optional)
+4. **RPC costs**: Based on your provider's pricing
+
+There are no ongoing rent costs for compressed accounts.
+
+</Accordion>
+
+<Accordion title="How do transaction fees compare?">
+Transaction fees are similar to regular Solana transactions:
+
+- **Regular transfer**: ~0.000005 SOL
+- **Compressed transfer**: ~0.000005 SOL
+- **Batch operations**: More efficient per operation
+
+The main savings come from eliminated rent costs, not transaction fees.
+
+</Accordion>
+
+## Troubleshooting
+
+<Accordion title="My transactions are failing. What should I check?">
+Common issues and solutions:
+
+1. **Insufficient balance**: Ensure you have enough tokens and SOL for fees
+2. **Invalid proofs**: Check that Merkle proofs are current and valid
+3. **Tree capacity**: Verify the Merkle tree isn't full
+4. **RPC issues**: Try a different RPC provider or endpoint
+5. **Network congestion**: Retry with higher priority fees
+
+Enable debug logging to get more detailed error information.
+
+</Accordion>
+
+<Accordion title="Queries are returning empty results. Why?">
+This usually indicates indexing issues:
+
+1. **Indexer lag**: Wait for indexers to catch up with recent transactions
+2. **Wrong RPC provider**: Ensure your provider supports compression indexing
+3. **Network mismatch**: Verify you're querying the correct network
+4. **Account doesn't exist**: Double-check account addresses and hashes
+
+Try querying with different commitment levels (processed, confirmed, finalized).
+
+</Accordion>
+
+<Accordion title="How do I debug Merkle proof issues?">
+To debug proof problems:
+
+1. **Verify proof structure**: Ensure all proof nodes are present
+2. **Check root hash**: Confirm you're using the current tree root
+3. **Validate leaf data**: Verify the account hash is correct
+4. **Test proof verification**: Use the SDK's verification functions
+5. **Check tree state**: Ensure the tree hasn't been modified
+
+Use the `verifyMerkleProof` function to test proofs independently.
+
+</Accordion>
+
+## Need More Help?
+
+<CardGroup cols={2}>
+  <Card title="Community" icon="users" href="/help/community">
+    Join our Discord and connect with other developers
+  </Card>
+  <Card title="GitHub" icon="github" href="/help/github">
+    Report issues and contribute to the project
+  </Card>
+</CardGroup>{" "}

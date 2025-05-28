@@ -1,0 +1,315 @@
+---
+title: "View & Verify"
+description: "Learn how to query and verify compressed state"
+---
+
+## Overview
+
+Understanding how to view and verify compressed state is crucial for building robust applications. This guide covers:
+
+- Querying compressed accounts and tokens
+- Verifying state integrity
+- Using indexers for efficient data access
+- Debugging compressed transactions
+
+## Querying Compressed Accounts
+
+### Get Compressed Token Accounts
+
+Query all compressed token accounts for a specific owner:
+
+```typescript
+import { getCompressedTokenAccountsByOwner } from "@lightprotocol/zk-compression-sdk";
+
+async function getTokenAccounts(owner: PublicKey) {
+  const accounts = await getCompressedTokenAccountsByOwner({
+    connection,
+    owner,
+  });
+
+  console.log(`Found ${accounts.length} compressed token accounts`);
+
+  accounts.forEach((account, index) => {
+    console.log(`Account ${index + 1}:`);
+    console.log(`  Mint: ${account.mint}`);
+    console.log(`  Amount: ${account.amount}`);
+    console.log(`  State: ${account.state}`);
+  });
+
+  return accounts;
+}
+```
+
+### Get Compressed Account History
+
+View the transaction history for a compressed account:
+
+```typescript
+import { getCompressedAccountHistory } from "@lightprotocol/zk-compression-sdk";
+
+async function getAccountHistory(accountHash: string) {
+  const history = await getCompressedAccountHistory({
+    connection,
+    accountHash,
+  });
+
+  console.log(`Account history (${history.length} transactions):`);
+
+  history.forEach((tx, index) => {
+    console.log(`Transaction ${index + 1}:`);
+    console.log(`  Signature: ${tx.signature}`);
+    console.log(`  Slot: ${tx.slot}`);
+    console.log(`  Type: ${tx.type}`);
+    console.log(`  Amount: ${tx.amount}`);
+  });
+
+  return history;
+}
+```
+
+## Verifying State Integrity
+
+### Verify Merkle Proofs
+
+Verify that compressed state is correctly included in the Merkle tree:
+
+```typescript
+import { verifyMerkleProof } from "@lightprotocol/zk-compression-sdk";
+
+async function verifyStateIntegrity(
+  accountHash: string,
+  merkleProof: string[],
+  merkleRoot: string
+) {
+  const isValid = await verifyMerkleProof({
+    leaf: accountHash,
+    proof: merkleProof,
+    root: merkleRoot,
+  });
+
+  if (isValid) {
+    console.log("✅ State integrity verified");
+  } else {
+    console.log("❌ State integrity check failed");
+  }
+
+  return isValid;
+}
+```
+
+### Validate Transaction Proofs
+
+Verify zero-knowledge proofs for compressed transactions:
+
+```typescript
+import { validateTransactionProof } from "@lightprotocol/zk-compression-sdk";
+
+async function validateTransaction(signature: string) {
+  try {
+    const transaction = await connection.getTransaction(signature);
+
+    if (!transaction) {
+      throw new Error("Transaction not found");
+    }
+
+    const isValid = await validateTransactionProof({
+      transaction,
+      connection,
+    });
+
+    if (isValid) {
+      console.log("✅ Transaction proof is valid");
+    } else {
+      console.log("❌ Transaction proof is invalid");
+    }
+
+    return isValid;
+  } catch (error) {
+    console.error("Error validating transaction:", error);
+    return false;
+  }
+}
+```
+
+## Using Indexers
+
+### Query with Filters
+
+Use indexers to efficiently query compressed state with filters:
+
+```typescript
+import { queryCompressedAccounts } from "@lightprotocol/zk-compression-sdk";
+
+async function queryWithFilters() {
+  // Query by mint
+  const tokenAccounts = await queryCompressedAccounts({
+    connection,
+    filters: {
+      mint: "YourMintAddressHere",
+      minAmount: 1000000, // Minimum balance
+    },
+  });
+
+  // Query by owner
+  const ownerAccounts = await queryCompressedAccounts({
+    connection,
+    filters: {
+      owner: "OwnerPublicKeyHere",
+      state: "active", // Only active accounts
+    },
+  });
+
+  // Query by date range
+  const recentAccounts = await queryCompressedAccounts({
+    connection,
+    filters: {
+      createdAfter: new Date("2024-01-01"),
+      createdBefore: new Date(),
+    },
+  });
+
+  return { tokenAccounts, ownerAccounts, recentAccounts };
+}
+```
+
+### Real-time Updates
+
+Subscribe to compressed account changes:
+
+```typescript
+import { subscribeToCompressedAccountChanges } from "@lightprotocol/zk-compression-sdk";
+
+async function subscribeToChanges(accountHash: string) {
+  const subscription = await subscribeToCompressedAccountChanges({
+    connection,
+    accountHash,
+    callback: (change) => {
+      console.log("Account changed:", {
+        type: change.type,
+        newState: change.newState,
+        oldState: change.oldState,
+        signature: change.signature,
+      });
+    },
+  });
+
+  console.log("✅ Subscribed to account changes");
+
+  // Cleanup function
+  return () => {
+    subscription.unsubscribe();
+    console.log("🔌 Unsubscribed from account changes");
+  };
+}
+```
+
+## Debugging Tools
+
+### Transaction Analysis
+
+Analyze compressed transactions for debugging:
+
+```typescript
+import { analyzeCompressedTransaction } from "@lightprotocol/zk-compression-sdk";
+
+async function debugTransaction(signature: string) {
+  const analysis = await analyzeCompressedTransaction({
+    connection,
+    signature,
+  });
+
+  console.log("Transaction Analysis:");
+  console.log(`  Status: ${analysis.status}`);
+  console.log(`  Compressed Accounts: ${analysis.compressedAccounts.length}`);
+  console.log(`  State Changes: ${analysis.stateChanges.length}`);
+  console.log(`  Proof Verification: ${analysis.proofValid ? "✅" : "❌"}`);
+  console.log(`  Gas Used: ${analysis.gasUsed}`);
+
+  if (analysis.errors.length > 0) {
+    console.log("Errors:");
+    analysis.errors.forEach((error, index) => {
+      console.log(`  ${index + 1}. ${error}`);
+    });
+  }
+
+  return analysis;
+}
+```
+
+### State Consistency Checks
+
+Verify state consistency across the network:
+
+```typescript
+import { checkStateConsistency } from "@lightprotocol/zk-compression-sdk";
+
+async function verifyConsistency(accountHash: string) {
+  const consistency = await checkStateConsistency({
+    connection,
+    accountHash,
+    checkNodes: 3, // Check against 3 different RPC nodes
+  });
+
+  console.log("State Consistency Check:");
+  console.log(`  Consistent: ${consistency.isConsistent ? "✅" : "❌"}`);
+  console.log(`  Nodes Checked: ${consistency.nodesChecked}`);
+  console.log(`  Consensus: ${consistency.consensus}%`);
+
+  if (!consistency.isConsistent) {
+    console.log("Inconsistencies found:");
+    consistency.differences.forEach((diff, index) => {
+      console.log(`  ${index + 1}. ${diff.description}`);
+    });
+  }
+
+  return consistency;
+}
+```
+
+## Best Practices
+
+### Efficient Querying
+
+1. **Use Filters**: Always apply filters to reduce data transfer
+2. **Pagination**: Implement pagination for large result sets
+3. **Caching**: Cache frequently accessed data locally
+4. **Indexing**: Use appropriate indexes for your query patterns
+
+### Error Handling
+
+```typescript
+async function robustQuery(owner: PublicKey) {
+  try {
+    const accounts = await getCompressedTokenAccountsByOwner({
+      connection,
+      owner,
+      timeout: 10000, // 10 second timeout
+      retries: 3, // Retry up to 3 times
+    });
+
+    return accounts;
+  } catch (error) {
+    if (error.code === "TIMEOUT") {
+      console.log("Query timed out, trying with reduced scope...");
+      // Implement fallback logic
+    } else if (error.code === "NETWORK_ERROR") {
+      console.log("Network error, retrying with different RPC...");
+      // Switch to backup RPC
+    } else {
+      console.error("Unexpected error:", error);
+      throw error;
+    }
+  }
+}
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Scale Your App" icon="chart-line" href="/next-steps/scale">
+    Learn advanced scaling patterns
+  </Card>
+  <Card title="Token Metadata" icon="tags" href="/next-steps/token-metadata">
+    Add metadata to your compressed tokens
+  </Card>
+</CardGroup>{" "}
