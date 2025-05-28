@@ -3,20 +3,20 @@
   "theme": "willow",
   "name": "ZK Compression",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0066ff",
+    "light": "#3388ff",
+    "dark": "#0044cc"
   },
   "favicon": "/favicon.svg",
   "navigation": {
     "groups": [
       {
-        "group": "Introduction",
-        "pages": ["introduction/what-and-why"]
-      },
-      {
-        "group": "Quickstart",
-        "pages": ["quickstart/setup", "quickstart/mint-and-send-demo"]
+        "group": "Get Started",
+        "pages": [
+          "index",
+          "introduction/setup",
+          "introduction/mint-and-send-demo"
+        ]
       },
       {
         "group": "Next Steps",
@@ -29,10 +29,6 @@
       {
         "group": "API Reference",
         "pages": ["api-reference/json-rpc", "api-reference/sdk-methods"]
-      },
-      {
-        "group": "Help & Resources",
-        "pages": ["help/faq", "help/community", "help/github"]
       }
     ]
   },
@@ -44,14 +40,15 @@
     "links": [
       {
         "label": "GitHub",
-        "href": "https://github.com/Lightprotocol/light-protocol"
+        "href": "https://github.com/Lightprotocol/light-protocol",
+        "icon": "github"
+      },
+      {
+        "label": "Discord",
+        "href": "https://discord.gg/lightprotocol",
+        "icon": "discord"
       }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Get Started",
-      "href": "https://docs.zkcompression.com/quickstart/setup"
-    }
+    ]
   },
   "footer": {
     "socials": {
