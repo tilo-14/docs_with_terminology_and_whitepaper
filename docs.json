@@ -12,23 +12,21 @@
     "groups": [
       {
         "group": "Get Started",
+        "pages": ["overview", "introduction/setup", "introduction/faq"]
+      },
+      {
+        "group": "Integrate",
         "pages": [
-          "index",
-          "introduction/setup",
-          "introduction/mint-and-send-demo"
+          "integrate/typescript-client",
+          "api-reference/json-rpc",
+          "integrate/token-metadata",
+          "integrate/wallet-support",
+          "integrate/addresses-and-urls"
         ]
       },
       {
-        "group": "Next Steps",
-        "pages": [
-          "next-steps/view-and-verify",
-          "next-steps/scale",
-          "next-steps/token-metadata"
-        ]
-      },
-      {
-        "group": "API Reference",
-        "pages": ["api-reference/json-rpc", "api-reference/sdk-methods"]
+        "group": "Examples",
+        "pages": ["examples/airdrop", "examples/user-data"]
       }
     ]
   },
