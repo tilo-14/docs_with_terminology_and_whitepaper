@@ -1,0 +1,40 @@
+---
+title: "getCompressedAccountProof"
+description: "Get a Merkle proof for a compressed account"
+---
+
+## getCompressedAccountProof
+
+Get a Merkle proof for a compressed account.
+
+### Parameters
+
+- `accountHash` (string): The account hash
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedAccountProof",
+  "params": ["accountHash"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "proof": {
+      "hash": "accountHash",
+      "merkleProof": ["hash1", "hash2", "hash3"],
+      "rootHash": "merkleRootHash",
+      "leafIndex": 42
+    }
+  }
+}
+```

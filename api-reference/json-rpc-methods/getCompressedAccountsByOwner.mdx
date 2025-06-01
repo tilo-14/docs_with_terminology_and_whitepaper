@@ -1,0 +1,61 @@
+---
+title: "getCompressedAccountsByOwner"
+description: "Get all compressed accounts owned by a specific address"
+---
+
+## getCompressedAccountsByOwner
+
+Get all compressed accounts owned by a specific address.
+
+### Parameters
+
+- `owner` (string): The owner's public key
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedAccountsByOwner",
+  "params": ["ownerPublicKey"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "accounts": [
+      {
+        "hash": "accountHash1",
+        "data": "base64EncodedData1",
+        "owner": "ownerPublicKey",
+        "lamports": 1000000,
+        "executable": false
+      },
+      {
+        "hash": "accountHash2",
+        "data": "base64EncodedData2",
+        "owner": "ownerPublicKey",
+        "lamports": 2000000,
+        "executable": false
+      }
+    ]
+  }
+}
+```
+
+### Response Fields
+
+| Field        | Type    | Description                        |
+| ------------ | ------- | ---------------------------------- |
+| `accounts`   | array   | Array of compressed accounts       |
+| `hash`       | string  | The hash of the compressed account |
+| `data`       | string  | Base64 encoded account data        |
+| `owner`      | string  | The owner's public key             |
+| `lamports`   | number  | Account balance in lamports        |
+| `executable` | boolean | Whether the account is executable  |

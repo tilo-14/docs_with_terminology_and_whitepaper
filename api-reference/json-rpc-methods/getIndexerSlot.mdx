@@ -1,0 +1,41 @@
+---
+title: "getIndexerSlot"
+description: "Get the current indexer slot"
+---
+
+## getIndexerSlot
+
+Get the current indexer slot.
+
+### Parameters
+
+None
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getIndexerSlot",
+  "params": []
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "slot": 123456789
+  }
+}
+```
+
+### Response Fields
+
+| Field  | Type   | Description                     |
+| ------ | ------ | ------------------------------- |
+| `slot` | number | The current indexer slot number |

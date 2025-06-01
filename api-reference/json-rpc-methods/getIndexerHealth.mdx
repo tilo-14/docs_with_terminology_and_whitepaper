@@ -1,0 +1,47 @@
+---
+title: "getIndexerHealth"
+description: "Get the health status of the indexer"
+---
+
+## getIndexerHealth
+
+Get the health status of the indexer.
+
+### Parameters
+
+None
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getIndexerHealth",
+  "params": []
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "status": "healthy",
+    "lastUpdate": 1672531200,
+    "slot": 123456789,
+    "version": "1.0.0"
+  }
+}
+```
+
+### Response Fields
+
+| Field        | Type   | Description                                |
+| ------------ | ------ | ------------------------------------------ |
+| `status`     | string | Health status (healthy/degraded/unhealthy) |
+| `lastUpdate` | number | Unix timestamp of last update              |
+| `slot`       | number | Current indexer slot                       |
+| `version`    | string | Indexer version                            |

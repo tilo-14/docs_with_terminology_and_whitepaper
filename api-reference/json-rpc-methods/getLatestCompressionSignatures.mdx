@@ -1,0 +1,46 @@
+---
+title: "getLatestCompressionSignatures"
+description: "Get the latest compression signatures"
+---
+
+## getLatestCompressionSignatures
+
+Get the latest compression signatures.
+
+### Parameters
+
+- `limit` (number, optional): Maximum number of signatures to return
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getLatestCompressionSignatures",
+  "params": [100]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "signatures": [
+      {
+        "signature": "sig1",
+        "slot": 123456789,
+        "blockTime": 1672531200
+      },
+      {
+        "signature": "sig2",
+        "slot": 123456788,
+        "blockTime": 1672531199
+      }
+    ]
+  }
+}
+```

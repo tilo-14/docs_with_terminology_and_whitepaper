@@ -1,0 +1,43 @@
+---
+title: "getCompressedTokenAccountsByOwner"
+description: "Get compressed token accounts by owner"
+---
+
+## getCompressedTokenAccountsByOwner
+
+Get compressed token accounts by owner.
+
+### Parameters
+
+- `owner` (string): The owner's public key
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedTokenAccountsByOwner",
+  "params": ["ownerPublicKey"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "tokenAccounts": [
+      {
+        "account": "tokenAccountAddress1",
+        "mint": "mintAddress1",
+        "owner": "ownerPublicKey",
+        "balance": 1000000000,
+        "decimals": 9
+      }
+    ]
+  }
+}
+```

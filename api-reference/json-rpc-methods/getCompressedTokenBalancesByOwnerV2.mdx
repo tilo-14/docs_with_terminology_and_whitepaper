@@ -1,0 +1,46 @@
+---
+title: "getCompressedTokenBalancesByOwnerV2"
+description: "Get compressed token balances by owner (version 2)"
+---
+
+## getCompressedTokenBalancesByOwnerV2
+
+Get compressed token balances by owner (version 2).
+
+### Parameters
+
+- `owner` (string): The owner's public key
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedTokenBalancesByOwnerV2",
+  "params": ["ownerPublicKey"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "tokenBalances": [
+      {
+        "mint": "mintAddress1",
+        "balance": 1000000000,
+        "decimals": 9
+      },
+      {
+        "mint": "mintAddress2",
+        "balance": 500000000,
+        "decimals": 6
+      }
+    ]
+  }
+}
+```

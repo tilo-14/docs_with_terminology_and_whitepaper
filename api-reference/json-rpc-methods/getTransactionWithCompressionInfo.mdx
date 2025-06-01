@@ -1,0 +1,43 @@
+---
+title: "getTransactionWithCompressionInfo"
+description: "Get transaction details with compression-specific information"
+---
+
+## getTransactionWithCompressionInfo
+
+Get transaction details with compression-specific information.
+
+### Parameters
+
+- `signature` (string): The transaction signature
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getTransactionWithCompressionInfo",
+  "params": ["transactionSignature"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "transaction": {
+      "signature": "transactionSignature",
+      "slot": 123456789,
+      "blockTime": 1672531200,
+      "compressionInfo": {
+        "compressedAccounts": ["account1", "account2"],
+        "proofs": ["proof1", "proof2"]
+      }
+    }
+  }
+}
+```

@@ -5,502 +5,627 @@ description: "Complete JSON RPC API reference for ZK Compression"
 
 ## Overview
 
-The ZK Compression JSON RPC API provides direct access to compressed state data and operations. This API extends the standard Solana JSON RPC with compression-specific methods.
+Helius Labs maintains the canonical RPC API and indexer implementation. The following pages outline all ZK Compression methods extending Solana's default JSON RPC API.
 
-## Base URL
+<Info>
+  All methods follow the standard JSON RPC 2.0 protocol. Base URL varies by
+  network: - **Devnet**: `https://api.devnet.solana.com` - **Mainnet**:
+  `https://api.mainnet-beta.solana.com`
+</Info>
 
-```
-https://api.devnet.solana.com  # Devnet
-https://api.mainnet-beta.solana.com  # Mainnet
-```
+<Note>
+  📋 **Quick Navigation**: Click any method below to expand its documentation.
+  All methods return JSON RPC 2.0 compliant responses.
+</Note>
 
-## Authentication
+---
 
-Most methods require no authentication. Rate limits apply based on your RPC provider.
+## <Icon icon="users" size={20} /> Account Methods
 
-## Compressed Account Methods
+<AccordionGroup>
 
-### getCompressedAccount
-
+<Accordion title="getCompressedAccount">
 Get details of a compressed account by its hash.
 
 **Parameters:**
 
 - `accountHash` (string): The hash of the compressed account
-- `options` (object, optional):
-  - `encoding` (string): Data encoding (base58, base64, jsonParsed)
-  - `commitment` (string): Commitment level (finalized, confirmed, processed)
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
   "method": "getCompressedAccount",
-  "params": [
-    "5J8bKsjF7mVdVs8V8E3QqK7Jy4Wn2Xp9Qm1Zr3Yt8Kp4",
-    {
-      "encoding": "jsonParsed",
-      "commitment": "confirmed"
-    }
-  ]
+  "params": ["accountHashExample"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
 
-```json
-{
-  "jsonrpc": "2.0",
-  "result": {
-    "account": {
-      "data": {
-        "parsed": {
-          "info": {
-            "mint": "So11111111111111111111111111111111111111112",
-            "owner": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-            "amount": "1000000000"
-          },
-          "type": "account"
-        },
-        "program": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
-        "space": 165
-      },
-      "executable": false,
-      "lamports": 0,
-      "owner": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
-      "rentEpoch": 361
-    },
-    "context": {
-      "slot": 123456789
-    }
-  },
-  "id": 1
-}
-```
+</Accordion>
 
-### getCompressedAccountsByOwner
-
+<Accordion title="getCompressedAccountsByOwner">
 Get all compressed accounts owned by a specific address.
 
 **Parameters:**
 
 - `owner` (string): The owner's public key
-- `filters` (object, optional):
-  - `mint` (string): Filter by mint address
-  - `programId` (string): Filter by program ID
-- `options` (object, optional):
-  - `encoding` (string): Data encoding
-  - `commitment` (string): Commitment level
-  - `limit` (number): Maximum number of results (default: 100)
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
   "method": "getCompressedAccountsByOwner",
-  "params": [
-    "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-    {
-      "mint": "So11111111111111111111111111111111111111112"
-    },
-    {
-      "encoding": "jsonParsed",
-      "limit": 50
-    }
-  ]
+  "params": ["ownerPublicKey"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getMultipleCompressedAccounts">
+Get multiple compressed accounts in a single request.
+
+**Parameters:**
+
+- `accountHashes` (array): Array of account hashes
+
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
-  "result": {
-    "accounts": [
-      {
-        "accountHash": "5J8bKsjF7mVdVs8V8E3QqK7Jy4Wn2Xp9Qm1Zr3Yt8Kp4",
-        "data": {
-          "parsed": {
-            "info": {
-              "mint": "So11111111111111111111111111111111111111112",
-              "owner": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-              "amount": "1000000000"
-            },
-            "type": "account"
-          }
-        }
-      }
-    ],
-    "context": {
-      "slot": 123456789
-    }
-  },
-  "id": 1
+  "id": 1,
+  "method": "getMultipleCompressedAccounts",
+  "params": [["hash1", "hash2", "hash3"]]
 }
 ```
 
-## Compressed Token Methods
+Placeholder content - detailed implementation will be added here.
 
-### getCompressedTokenBalance
+</Accordion>
 
-Get the compressed token balance for a specific mint and owner.
+</AccordionGroup>
+
+---
+
+## <Icon icon="coins" size={20} /> Balance Methods
+
+<AccordionGroup>
+
+<Accordion title="getCompressedBalance">
+Get the compressed SOL balance for a specific owner.
 
 **Parameters:**
 
-- `mint` (string): The mint address
 - `owner` (string): The owner's public key
-- `options` (object, optional):
-  - `commitment` (string): Commitment level
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "getCompressedTokenBalance",
-  "params": [
-    "So11111111111111111111111111111111111111112",
-    "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-    {
-      "commitment": "confirmed"
-    }
-  ]
+  "method": "getCompressedBalance",
+  "params": ["ownerPublicKey"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getCompressedBalanceByOwner">
+Get compressed balances grouped by owner.
+
+**Parameters:**
+
+- `owner` (string): The owner's public key
+
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
-  "result": {
-    "value": {
-      "amount": "1000000000",
-      "decimals": 9,
-      "uiAmount": 1.0,
-      "uiAmountString": "1"
-    },
-    "context": {
-      "slot": 123456789
-    }
-  },
-  "id": 1
+  "id": 1,
+  "method": "getCompressedBalanceByOwner",
+  "params": ["ownerPublicKey"]
 }
 ```
 
-### getCompressedTokenAccountsByMint
+Placeholder content - detailed implementation will be added here.
 
-Get all compressed token accounts for a specific mint.
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## <Icon icon="credit-card" size={20} /> Token Account Methods
+
+<AccordionGroup>
+
+<Accordion title="getCompressedTokenAccountBalance">
+Get the compressed token balance for a specific token account.
+
+**Parameters:**
+
+- `account` (string): The token account address
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedTokenAccountBalance",
+  "params": ["tokenAccountAddress"]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getCompressedMintTokenHolders">
+Get all token holders for a specific compressed mint.
 
 **Parameters:**
 
 - `mint` (string): The mint address
-- `options` (object, optional):
-  - `encoding` (string): Data encoding
-  - `commitment` (string): Commitment level
-  - `limit` (number): Maximum number of results
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "getCompressedTokenAccountsByMint",
-  "params": [
-    "So11111111111111111111111111111111111111112",
-    {
-      "encoding": "jsonParsed",
-      "limit": 100
-    }
-  ]
+  "method": "getCompressedMintTokenHolders",
+  "params": ["mintAddress"]
 }
 ```
 
-## Merkle Tree Methods
+Placeholder content - detailed implementation will be added here.
 
-### getMerkleTreeInfo
+</Accordion>
 
-Get information about a Merkle tree.
+<Accordion title="getCompressedTokenBalancesByOwnerV2">
+Get compressed token balances by owner (version 2).
 
 **Parameters:**
 
-- `tree` (string): The Merkle tree address
-- `options` (object, optional):
-  - `commitment` (string): Commitment level
+- `owner` (string): The owner's public key
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "getMerkleTreeInfo",
-  "params": [
-    "TreeAddress123456789",
-    {
-      "commitment": "confirmed"
-    }
-  ]
+  "method": "getCompressedTokenBalancesByOwnerV2",
+  "params": ["ownerPublicKey"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
 
-```json
-{
-  "jsonrpc": "2.0",
-  "result": {
-    "tree": {
-      "maxDepth": 30,
-      "maxBufferSize": 64,
-      "canopyDepth": 14,
-      "accountCount": 1000,
-      "maxAccounts": 1073741824,
-      "root": "RootHash123456789",
-      "authority": "AuthorityAddress123456789"
-    },
-    "context": {
-      "slot": 123456789
-    }
-  },
-  "id": 1
-}
-```
+</Accordion>
 
-### getMerkleProof
-
-Get a Merkle proof for a specific account.
+<Accordion title="getCompressedTokenAccountsByOwner">
+Get compressed token accounts by owner.
 
 **Parameters:**
 
-- `tree` (string): The Merkle tree address
-- `accountHash` (string): The account hash to prove
-- `options` (object, optional):
-  - `commitment` (string): Commitment level
+- `owner` (string): The owner's public key
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "getMerkleProof",
-  "params": [
-    "TreeAddress123456789",
-    "5J8bKsjF7mVdVs8V8E3QqK7Jy4Wn2Xp9Qm1Zr3Yt8Kp4",
-    {
-      "commitment": "confirmed"
-    }
-  ]
+  "method": "getCompressedTokenAccountsByOwner",
+  "params": ["ownerPublicKey"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getCompressedTokenAccountsByDelegate">
+Get compressed token accounts by delegate.
+
+**Parameters:**
+
+- `delegate` (string): The delegate's public key
+
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
-  "result": {
-    "proof": ["ProofNode1", "ProofNode2", "ProofNode3"],
-    "root": "RootHash123456789",
-    "leaf": "5J8bKsjF7mVdVs8V8E3QqK7Jy4Wn2Xp9Qm1Zr3Yt8Kp4",
-    "leafIndex": 42,
-    "context": {
-      "slot": 123456789
-    }
-  },
-  "id": 1
+  "id": 1,
+  "method": "getCompressedTokenAccountsByDelegate",
+  "params": ["delegatePublicKey"]
 }
 ```
 
-## Transaction Methods
+Placeholder content - detailed implementation will be added here.
 
-### getCompressedTransaction
+</Accordion>
 
-Get details of a compressed transaction.
+</AccordionGroup>
+
+---
+
+## <Icon icon="repeat" size={20} /> Transaction Methods
+
+<AccordionGroup>
+
+<Accordion title="getTransactionWithCompressionInfo">
+Get transaction details with compression-specific information.
 
 **Parameters:**
 
 - `signature` (string): The transaction signature
-- `options` (object, optional):
-  - `encoding` (string): Data encoding
-  - `commitment` (string): Commitment level
-  - `maxSupportedTransactionVersion` (number): Max transaction version
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "getCompressedTransaction",
-  "params": [
-    "TransactionSignature123456789",
-    {
-      "encoding": "jsonParsed",
-      "maxSupportedTransactionVersion": 0
-    }
-  ]
+  "method": "getTransactionWithCompressionInfo",
+  "params": ["transactionSignature"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
 
-```json
-{
-  "jsonrpc": "2.0",
-  "result": {
-    "transaction": {
-      "message": {
-        "accountKeys": ["..."],
-        "instructions": ["..."],
-        "recentBlockhash": "BlockhashValue"
-      },
-      "signatures": ["TransactionSignature123456789"]
-    },
-    "meta": {
-      "err": null,
-      "fee": 5000,
-      "preBalances": [1000000000],
-      "postBalances": [999995000],
-      "compressedStateChanges": [
-        {
-          "type": "create",
-          "accountHash": "NewAccountHash",
-          "data": "CompressedAccountData"
-        }
-      ]
-    },
-    "blockTime": 1640995200,
-    "slot": 123456789
-  },
-  "id": 1
-}
-```
+</Accordion>
 
-## Subscription Methods
+</AccordionGroup>
 
-### compressedAccountSubscribe
+---
 
-Subscribe to compressed account changes.
+## <Icon icon="certificate" size={20} /> Proof Methods
+
+<AccordionGroup>
+
+<Accordion title="getCompressedAccountProof">
+Get a Merkle proof for a compressed account.
 
 **Parameters:**
 
-- `accountHash` (string): The account hash to monitor
-- `options` (object, optional):
-  - `encoding` (string): Data encoding
-  - `commitment` (string): Commitment level
+- `accountHash` (string): The account hash
 
-**Request:**
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
   "id": 1,
-  "method": "compressedAccountSubscribe",
-  "params": [
-    "5J8bKsjF7mVdVs8V8E3QqK7Jy4Wn2Xp9Qm1Zr3Yt8Kp4",
-    {
-      "encoding": "jsonParsed",
-      "commitment": "confirmed"
-    }
-  ]
+  "method": "getCompressedAccountProof",
+  "params": ["accountHash"]
 }
 ```
 
-**Response:**
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getMultipleCompressedAccountProofs">
+Get Merkle proofs for multiple compressed accounts.
+
+**Parameters:**
+
+- `accountHashes` (array): Array of account hashes
+
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
-  "result": 12345,
-  "id": 1
+  "id": 1,
+  "method": "getMultipleCompressedAccountProofs",
+  "params": [["hash1", "hash2", "hash3"]]
 }
 ```
 
-**Notification:**
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getMultipleNewAddressProofs">
+Get proofs for multiple new addresses.
+
+**Parameters:**
+
+- `addresses` (array): Array of new addresses
+
+**Example Request:**
 
 ```json
 {
   "jsonrpc": "2.0",
-  "method": "compressedAccountNotification",
-  "params": {
-    "result": {
-      "context": {
-        "slot": 123456790
-      },
-      "value": {
-        "accountHash": "5J8bKsjF7mVdVs8V8E3QqK7Jy4Wn2Xp9Qm1Zr3Yt8Kp4",
-        "data": {
-          "parsed": {
-            "info": {
-              "mint": "So11111111111111111111111111111111111111112",
-              "owner": "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM",
-              "amount": "2000000000"
-            },
-            "type": "account"
-          }
-        }
-      }
-    },
-    "subscription": 12345
-  }
+  "id": 1,
+  "method": "getMultipleNewAddressProofs",
+  "params": [["address1", "address2", "address3"]]
 }
 ```
 
-## Error Codes
+Placeholder content - detailed implementation will be added here.
 
-Common error codes returned by the API:
+</Accordion>
 
-| Code   | Message                   | Description                                  |
-| ------ | ------------------------- | -------------------------------------------- |
-| -32600 | Invalid Request           | The JSON sent is not a valid Request object  |
-| -32601 | Method not found          | The method does not exist / is not available |
-| -32602 | Invalid params            | Invalid method parameter(s)                  |
-| -32603 | Internal error            | Internal JSON-RPC error                      |
-| -32000 | Account not found         | The compressed account was not found         |
-| -32001 | Invalid account hash      | The provided account hash is invalid         |
-| -32002 | Tree not found            | The Merkle tree was not found                |
-| -32003 | Proof verification failed | The Merkle proof could not be verified       |
+<Accordion title="getValidityProof">
+Get a validity proof for compressed state.
 
-## Rate Limits
+**Parameters:**
 
-Rate limits vary by RPC provider:
+- `stateHash` (string): The state hash
 
-- **Public endpoints**: 100 requests/second
-- **Private endpoints**: 1000+ requests/second
-- **WebSocket connections**: 100 concurrent connections
+**Example Request:**
 
-## Best Practices
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getValidityProof",
+  "params": ["stateHash"]
+}
+```
 
-1. **Use appropriate commitment levels**:
+Placeholder content - detailed implementation will be added here.
 
-   - `processed`: Fastest, least reliable
-   - `confirmed`: Balanced speed and reliability
-   - `finalized`: Slowest, most reliable
+</Accordion>
 
-2. **Implement retry logic** for transient errors
+</AccordionGroup>
 
-3. **Cache frequently accessed data** to reduce API calls
+---
 
-4. **Use batch requests** when possible to improve efficiency
+## <Icon icon="pen-nib" size={20} /> Signature Methods
 
-5. **Monitor rate limits** and implement backoff strategies
+<AccordionGroup>
 
-## Next Steps
+<Accordion title="getCompressionSignaturesForAccount">
+Get compression signatures for a specific account.
+
+**Parameters:**
+
+- `account` (string): The account address
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressionSignaturesForAccount",
+  "params": ["accountAddress"]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getCompressionSignaturesForAddress">
+Get compression signatures for a specific address.
+
+**Parameters:**
+
+- `address` (string): The address
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressionSignaturesForAddress",
+  "params": ["address"]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getCompressionSignaturesForOwner">
+Get compression signatures for a specific owner.
+
+**Parameters:**
+
+- `owner` (string): The owner's public key
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressionSignaturesForOwner",
+  "params": ["ownerPublicKey"]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getCompressionSignaturesForTokenOwner">
+Get compression signatures for a token owner.
+
+**Parameters:**
+
+- `tokenOwner` (string): The token owner's public key
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressionSignaturesForTokenOwner",
+  "params": ["tokenOwnerPublicKey"]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getLatestCompressionSignatures">
+Get the latest compression signatures.
+
+**Parameters:**
+
+- `limit` (number, optional): Maximum number of signatures to return
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getLatestCompressionSignatures",
+  "params": [100]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getLatestNonVotingSignatures">
+Get the latest non-voting signatures.
+
+**Parameters:**
+
+- `limit` (number, optional): Maximum number of signatures to return
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getLatestNonVotingSignatures",
+  "params": [100]
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## <Icon icon="server" size={20} /> Indexer Methods
+
+<AccordionGroup>
+
+<Accordion title="getIndexerSlot">
+Get the current indexer slot.
+
+**Parameters:**
+None
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getIndexerSlot",
+  "params": []
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+<Accordion title="getIndexerHealth">
+Get the health status of the indexer.
+
+**Parameters:**
+None
+
+**Example Request:**
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getIndexerHealth",
+  "params": []
+}
+```
+
+Placeholder content - detailed implementation will be added here.
+
+</Accordion>
+
+</AccordionGroup>
+
+---
+
+## ⚠️ Error Codes
+
+<Warning>
+  Handle these common error scenarios in your application for better user
+  experience.
+</Warning>
+
+| Code   | Message              | Description                                  |
+| ------ | -------------------- | -------------------------------------------- |
+| -32600 | Invalid Request      | The JSON sent is not a valid Request object  |
+| -32601 | Method not found     | The method does not exist / is not available |
+| -32602 | Invalid params       | Invalid method parameter(s)                  |
+| -32603 | Internal error       | Internal JSON-RPC error                      |
+| -32000 | Account not found    | The compressed account was not found         |
+| -32001 | Invalid account hash | The provided account hash is invalid         |
+
+---
+
+## 💡 Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Commitment Levels" icon="shield-check">
+    Use appropriate commitment levels: `processed` (fastest), `confirmed`
+    (balanced), `finalized` (most reliable)
+  </Card>
+  <Card title="Rate Limiting" icon="gauge-high">
+    Implement retry logic and respect rate limits. Public endpoints: 100 req/s,
+    Private: 1000+ req/s
+  </Card>
+  <Card title="Batch Requests" icon="layer-group">
+    Use batch requests when possible to improve efficiency and reduce API calls
+  </Card>
+  <Card title="Caching" icon="database">
+    Cache frequently accessed data to reduce API calls and improve performance
+  </Card>
+</CardGroup>
+
+---
+
+## 🚀 Next Steps
 
 <CardGroup cols={2}>
   <Card title="SDK Methods" icon="code" href="/api-reference/sdk-methods">
-    Explore the TypeScript SDK methods
+    Explore the TypeScript SDK methods for easier integration
   </Card>
   <Card title="FAQ" icon="circle-question" href="/help/faq">
-    Find answers to common questions
+    Find answers to common questions and troubleshooting tips
   </Card>
-</CardGroup>{" "}
+</CardGroup>

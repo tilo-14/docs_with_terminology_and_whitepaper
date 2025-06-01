@@ -1,0 +1,58 @@
+---
+title: "getCompressedAccount"
+description: "Get details of a compressed account by its hash"
+---
+
+## getCompressedAccount
+
+Get details of a compressed account by its hash.
+
+### Parameters
+
+- `accountHash` (string): The hash of the compressed account
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedAccount",
+  "params": ["accountHashExample"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "account": {
+      "hash": "accountHashExample",
+      "data": "base64EncodedData",
+      "owner": "ownerPublicKey",
+      "lamports": 1000000,
+      "executable": false
+    }
+  }
+}
+```
+
+### Response Fields
+
+| Field        | Type    | Description                        |
+| ------------ | ------- | ---------------------------------- |
+| `hash`       | string  | The hash of the compressed account |
+| `data`       | string  | Base64 encoded account data        |
+| `owner`      | string  | The owner's public key             |
+| `lamports`   | number  | Account balance in lamports        |
+| `executable` | boolean | Whether the account is executable  |
+
+### Error Codes
+
+| Code   | Message              | Description                          |
+| ------ | -------------------- | ------------------------------------ |
+| -32000 | Account not found    | The compressed account was not found |
+| -32001 | Invalid account hash | The provided account hash is invalid |

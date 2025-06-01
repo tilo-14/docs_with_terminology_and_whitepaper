@@ -1,108 +1,299 @@
 ---
 title: "Setup"
-description: "Get your development environment ready for ZK Compression"
+description: "Get your development environment ready for ZK Compression and run your first airdrop"
 ---
 
-## Prerequisites
+## Getting Started with ZK Compression
 
-Before getting started with ZK Compression, make sure you have:
+ZK Compression on Solana consists of two main parts: **client development** and **on-chain program development**. This guide will get you set up for client development and walk you through creating your first compressed token airdrop.
 
-- **Node.js** (v16 or higher)
-- **Solana CLI** tools installed
-- **Basic Solana development** knowledge
-- **TypeScript/JavaScript** familiarity
+The ZK Compression RPC API extends Solana's JSON RPC API with additional endpoints for interacting with ZK compressed accounts.
 
-## Installation
+---
 
-### 1. Install the ZK Compression SDK
+## Development Setup
 
-```bash
-npm install @lightprotocol/zk-compression-sdk
-# or
-yarn add @lightprotocol/zk-compression-sdk
-```
+<Steps>
+  <Step title="Install Dependencies">
+    Install the ZK Compression CLI and required SDKs:
 
-### 2. Install Solana Dependencies
+    ```bash
+    npm install -g @lightprotocol/zk-compression-cli && \
+    npm install --save \
+        @lightprotocol/stateless.js \
+        @lightprotocol/compressed-token \
+        @solana/web3.js \
+        @solana/spl-token \
+        bs58 \
+        dotenv
+    ```
 
-```bash
-npm install @solana/web3.js @solana/spl-token
-```
+  </Step>
 
-### 3. Set up your Solana Environment
+  <Step title="Set Up Environment Variables">
+    Create a `.env` file in your project root:
 
-Configure your Solana CLI for development:
+    ```bash
+    # Helius RPC endpoint (supports ZK Compression)
+    RPC_ENDPOINT="https://devnet.helius-rpc.com?api-key=<your_api_key>"
 
-```bash
-# Set to devnet for testing
-solana config set --url devnet
+    # Your wallet keypair (base58 encoded)
+    PAYER_KEYPAIR="your_base58_encoded_private_key"
+    ```
 
-# Create a new keypair (if you don't have one)
-solana-keygen new --outfile ~/.config/solana/id.json
+    <Note>
+      Get a free Helius API key at [helius.xyz](https://helius.xyz) for devnet access.
+    </Note>
 
-# Get some devnet SOL for testing
-solana airdrop 2
-```
+  </Step>
 
-## Basic Setup
+  <Step title="Create RPC Connection">
+    Set up your connection to the ZK Compression network:
 
-### Initialize your project
+    ```typescript
+    import { createRpc, Rpc } from "@lightprotocol/stateless.js";
+    import { Keypair } from "@solana/web3.js";
+    import bs58 from "bs58";
+    import dotenv from "dotenv";
 
-Create a new project and set up the basic structure:
+    dotenv.config();
 
-```typescript
-import { Connection, Keypair } from "@solana/web3.js";
-import { ZkCompressionSDK } from "@lightprotocol/zk-compression-sdk";
+    // Helius exposes Solana and Photon RPC endpoints through a single URL
+    const RPC_ENDPOINT = process.env.RPC_ENDPOINT!;
+    const connection: Rpc = createRpc(RPC_ENDPOINT, RPC_ENDPOINT, RPC_ENDPOINT);
 
-// Initialize connection
-const connection = new Connection("https://api.devnet.solana.com");
+    // Load your keypair
+    const payer = Keypair.fromSecretKey(bs58.decode(process.env.PAYER_KEYPAIR!));
 
-// Load your keypair
-const payer = Keypair.fromSecretKey(
-  new Uint8Array(JSON.parse(process.env.SOLANA_PRIVATE_KEY!))
-);
+    console.log("✅ Connected to ZK Compression network");
+    ```
 
-// Initialize ZK Compression SDK
-const zkCompression = new ZkCompressionSDK({
-  connection,
-  payer,
-});
-```
+  </Step>
 
-### Environment Variables
+  <Step title="Test Local Development (Optional)">
+    For local development, you can run a local test validator:
 
-Create a `.env` file in your project root:
+    ```bash
+    # Start local test validator with ZK Compression
+    light test-validator
+    ```
 
-```bash
-SOLANA_PRIVATE_KEY="[1,2,3,...]"  # Your keypair as JSON array
-RPC_URL="https://api.devnet.solana.com"
-```
+    Then connect to it:
 
-## Verification
+    ```typescript
+    // For localnet
+    const connection = createRpc();
 
-Test your setup with this simple verification script:
+    async function testConnection() {
+      const slot = await connection.getSlot();
+      const health = await connection.getIndexerHealth(slot);
+      console.log("Slot:", slot, "Health:", health);
+    }
+    ```
 
-```typescript
-async function verifySetup() {
-  try {
-    // Check connection
-    const version = await connection.getVersion();
-    console.log("✅ Connected to Solana:", version);
+  </Step>
+</Steps>
 
-    // Check balance
-    const balance = await connection.getBalance(payer.publicKey);
-    console.log("✅ Wallet balance:", balance / 1e9, "SOL");
+---
 
-    // Initialize ZK Compression
-    await zkCompression.initialize();
-    console.log("✅ ZK Compression SDK initialized");
-  } catch (error) {
-    console.error("❌ Setup verification failed:", error);
-  }
-}
+## Your First Compressed Token Airdrop
 
-verifySetup();
-```
+Let's create and distribute compressed SPL tokens to multiple wallets. Compressed tokens are up to **5000x cheaper** than regular SPL tokens!
 
-## Next Steps
+<Steps>
+  <Step title="Create and Fund Your Mint">
+    First, create an SPL token mint and register it for compression:
 
-Now that your environment is set up, you're ready to start building with ZK Compression!
+    ```typescript
+    import { createMint, getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
+    import { createTokenPool } from '@lightprotocol/compressed-token';
+    import { confirmTx } from "@lightprotocol/stateless.js";
+
+    async function setupMint() {
+      // Airdrop SOL for transaction fees
+      await confirmTx(
+        connection,
+        await connection.requestAirdrop(payer.publicKey, 10e9)
+      );
+
+      // Create SPL token mint
+      const mint = await createMint(
+        connection,
+        payer,
+        payer.publicKey,
+        null,
+        9 // decimals
+      );
+      console.log(`✅ Created mint: ${mint}`);
+
+      // Register mint for compression
+      const poolTxId = await createTokenPool(connection, payer, mint);
+      console.log(`✅ Registered for compression: ${poolTxId}`);
+
+      // Create token account and mint initial supply
+      const ata = await getOrCreateAssociatedTokenAccount(
+        connection,
+        payer,
+        mint,
+        payer.publicKey
+      );
+
+      const mintToTxId = await mintTo(
+        connection,
+        payer,
+        mint,
+        ata.address,
+        payer.publicKey,
+        1e9 * 1e9 // 1 billion tokens
+      );
+      console.log(`✅ Minted tokens: ${mintToTxId}`);
+
+      return { mint, ata };
+    }
+    ```
+
+  </Step>
+
+  <Step title="Prepare Airdrop Recipients">
+    Define your airdrop recipients and amounts:
+
+    ```typescript
+    // Example recipient wallets (replace with real addresses)
+    const airdropRecipients = [
+      "11111111111111111111111111111112",
+      "22222222222222222222222222222222",
+      "33333333333333333333333333333333",
+      "44444444444444444444444444444444",
+      "55555555555555555555555555555555"
+    ].map(address => new PublicKey(address));
+
+    // Amount to send to each recipient (in token base units)
+    const amountPerRecipient = bn(1000 * 1e9); // 1000 tokens
+    ```
+
+  </Step>
+
+  <Step title="Execute the Airdrop">
+    Compress and distribute tokens to all recipients in a single transaction:
+
+    ```typescript
+    import {
+      CompressedTokenProgram,
+      getTokenPoolInfos,
+      selectTokenPoolInfo
+    } from "@lightprotocol/compressed-token";
+    import {
+      buildAndSignTx,
+      calculateComputeUnitPrice,
+      selectStateTreeInfo,
+      sendAndConfirmTx,
+      dedupeSigner,
+      bn
+    } from "@lightprotocol/stateless.js";
+    import { ComputeBudgetProgram } from "@solana/web3.js";
+
+    async function executeAirdrop(mint: PublicKey, sourceAta: any) {
+      // Select compression infrastructure
+      const activeStateTrees = await connection.getStateTreeInfos();
+      const treeInfo = selectStateTreeInfo(activeStateTrees);
+
+      const tokenPoolInfos = await getTokenPoolInfos(connection, mint);
+      const tokenPoolInfo = selectTokenPoolInfo(tokenPoolInfos);
+
+      // Build transaction
+      const instructions = [];
+
+      // Set compute budget (120k CU per recipient)
+      instructions.push(
+        ComputeBudgetProgram.setComputeUnitLimit({
+          units: 120_000 * airdropRecipients.length
+        }),
+        ComputeBudgetProgram.setComputeUnitPrice({
+          microLamports: calculateComputeUnitPrice(20_000, 120_000)
+        })
+      );
+
+      // Create compress instruction
+      const compressInstruction = await CompressedTokenProgram.compress({
+        payer: payer.publicKey,
+        owner: payer.publicKey,
+        source: sourceAta.address,
+        toAddress: airdropRecipients,
+        amount: airdropRecipients.map(() => amountPerRecipient),
+        mint,
+        tokenPoolInfo,
+        outputStateTreeInfo: treeInfo,
+      });
+
+      instructions.push(compressInstruction);
+
+      // Sign and send transaction
+      const additionalSigners = dedupeSigner(payer, [payer]);
+      const { blockhash } = await connection.getLatestBlockhash();
+      const tx = buildAndSignTx(instructions, payer, blockhash, additionalSigners);
+
+      const txId = await sendAndConfirmTx(connection, tx);
+      console.log(`🎉 Airdrop successful! Transaction: ${txId}`);
+
+      return txId;
+    }
+    ```
+
+  </Step>
+
+  <Step title="Run the Complete Airdrop">
+    Put it all together:
+
+    ```typescript
+    async function runAirdrop() {
+      try {
+        console.log("🚀 Starting compressed token airdrop...");
+
+        // Setup mint and initial tokens
+        const { mint, ata } = await setupMint();
+
+        // Execute the airdrop
+        const txId = await executeAirdrop(mint, ata);
+
+        console.log(`✅ Successfully airdropped tokens to ${airdropRecipients.length} wallets`);
+        console.log(`💰 Total cost: ~${airdropRecipients.length * 0.000005} SOL`);
+        console.log(`🔗 Transaction: https://explorer.solana.com/tx/${txId}?cluster=devnet`);
+
+      } catch (error) {
+        console.error("❌ Airdrop failed:", error);
+      }
+    }
+
+    // Run the airdrop
+    runAirdrop();
+    ```
+
+  </Step>
+</Steps>
+
+## What's Next?
+
+🎉 Congratulations! You've successfully:
+
+- Set up your ZK Compression development environment
+- Created a compressed SPL token
+- Executed a cost-efficient airdrop to multiple wallets
+
+**Key Benefits You Just Experienced:**
+
+- **5000x cheaper** than regular SPL tokens
+- **Batch operations** to multiple recipients
+- **Wallet compatibility** with Phantom, Backpack, and more
+
+<CardGroup cols={2}>
+  <Card title="Build Programs" href="/developers/programs" icon="code">
+    Learn to build on-chain programs with ZK Compression
+  </Card>
+  <Card
+    title="Advanced Airdrops"
+    href="/developers/airdrops"
+    icon="parachute-box"
+  >
+    Scale to thousands of recipients efficiently
+  </Card>
+</CardGroup>

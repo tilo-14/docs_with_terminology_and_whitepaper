@@ -1,0 +1,41 @@
+---
+title: "getCompressedBalanceByOwner"
+description: "Get compressed balances grouped by owner"
+---
+
+## getCompressedBalanceByOwner
+
+Get compressed balances grouped by owner.
+
+### Parameters
+
+- `owner` (string): The owner's public key
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedBalanceByOwner",
+  "params": ["ownerPublicKey"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "balances": [
+      {
+        "owner": "ownerPublicKey",
+        "balance": 5000000000,
+        "mint": "11111111111111111111111111111112"
+      }
+    ]
+  }
+}
+```

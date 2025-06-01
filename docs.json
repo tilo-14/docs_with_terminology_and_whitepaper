@@ -18,7 +18,27 @@
         "group": "Integrate",
         "pages": [
           "integrate/typescript-client",
-          "api-reference/json-rpc",
+          {
+            "group": "JSON RPC Methods",
+            "pages": [
+              "api-reference/json-rpc-methods/index",
+              "api-reference/json-rpc-methods/getCompressedAccount",
+              "api-reference/json-rpc-methods/getCompressedAccountsByOwner",
+              "api-reference/json-rpc-methods/getMultipleCompressedAccounts",
+              "api-reference/json-rpc-methods/getCompressedBalance",
+              "api-reference/json-rpc-methods/getCompressedBalanceByOwner",
+              "api-reference/json-rpc-methods/getCompressedTokenAccountBalance",
+              "api-reference/json-rpc-methods/getCompressedMintTokenHolders",
+              "api-reference/json-rpc-methods/getCompressedTokenBalancesByOwnerV2",
+              "api-reference/json-rpc-methods/getCompressedTokenAccountsByOwner",
+              "api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate",
+              "api-reference/json-rpc-methods/getTransactionWithCompressionInfo",
+              "api-reference/json-rpc-methods/getCompressedAccountProof",
+              "api-reference/json-rpc-methods/getLatestCompressionSignatures",
+              "api-reference/json-rpc-methods/getIndexerSlot",
+              "api-reference/json-rpc-methods/getIndexerHealth"
+            ]
+          },
           "integrate/token-metadata",
           "integrate/wallet-support",
           "integrate/addresses-and-urls"

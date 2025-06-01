@@ -1,0 +1,44 @@
+---
+title: "getCompressedTokenAccountsByDelegate"
+description: "Get compressed token accounts by delegate"
+---
+
+## getCompressedTokenAccountsByDelegate
+
+Get compressed token accounts by delegate.
+
+### Parameters
+
+- `delegate` (string): The delegate's public key
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedTokenAccountsByDelegate",
+  "params": ["delegatePublicKey"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "tokenAccounts": [
+      {
+        "account": "tokenAccountAddress1",
+        "mint": "mintAddress1",
+        "owner": "ownerPublicKey",
+        "delegate": "delegatePublicKey",
+        "balance": 1000000000,
+        "decimals": 9
+      }
+    ]
+  }
+}
+```

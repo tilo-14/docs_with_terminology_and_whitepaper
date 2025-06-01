@@ -1,0 +1,96 @@
+---
+title: "JSON RPC Methods Overview"
+description: "Complete JSON RPC API reference for ZK Compression"
+---
+
+# JSON RPC Methods
+
+Helius Labs maintains the canonical RPC API and indexer implementation. The following pages outline all ZK Compression methods extending Solana's default JSON RPC API.
+
+<Info>
+  All methods follow the standard JSON RPC 2.0 protocol. Base URL varies by
+  network: - **Devnet**: `https://api.devnet.solana.com` - **Mainnet**:
+  `https://api.mainnet-beta.solana.com`
+</Info>
+
+## Method Categories
+
+### 👥 Account Methods
+
+Methods for retrieving compressed account information:
+
+- [getCompressedAccount](/api-reference/json-rpc-methods/getCompressedAccount)
+- [getCompressedAccountsByOwner](/api-reference/json-rpc-methods/getCompressedAccountsByOwner)
+- [getMultipleCompressedAccounts](/api-reference/json-rpc-methods/getMultipleCompressedAccounts)
+
+### 💰 Balance Methods
+
+Methods for checking compressed SOL and token balances:
+
+- [getCompressedBalance](/api-reference/json-rpc-methods/getCompressedBalance)
+- [getCompressedBalanceByOwner](/api-reference/json-rpc-methods/getCompressedBalanceByOwner)
+
+### 🪙 Token Account Methods
+
+Methods for compressed token accounts:
+
+- [getCompressedTokenAccountBalance](/api-reference/json-rpc-methods/getCompressedTokenAccountBalance)
+- [getCompressedMintTokenHolders](/api-reference/json-rpc-methods/getCompressedMintTokenHolders)
+- [getCompressedTokenBalancesByOwnerV2](/api-reference/json-rpc-methods/getCompressedTokenBalancesByOwnerV2)
+- [getCompressedTokenAccountsByOwner](/api-reference/json-rpc-methods/getCompressedTokenAccountsByOwner)
+- [getCompressedTokenAccountsByDelegate](/api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate)
+
+### 🔄 Transaction Methods
+
+Methods for compression transaction information:
+
+- [getTransactionWithCompressionInfo](/api-reference/json-rpc-methods/getTransactionWithCompressionInfo)
+
+### 🛡️ Proof Methods
+
+Methods for Merkle proofs and validity checks:
+
+- [getCompressedAccountProof](/api-reference/json-rpc-methods/getCompressedAccountProof)
+
+### ✍️ Signature Methods
+
+Methods for compression signatures:
+
+- [getLatestCompressionSignatures](/api-reference/json-rpc-methods/getLatestCompressionSignatures)
+
+### 🖥️ Indexer Methods
+
+Methods for indexer status and health:
+
+- [getIndexerSlot](/api-reference/json-rpc-methods/getIndexerSlot)
+- [getIndexerHealth](/api-reference/json-rpc-methods/getIndexerHealth)
+
+## Error Codes
+
+| Code   | Message              | Description                                  |
+| ------ | -------------------- | -------------------------------------------- |
+| -32600 | Invalid Request      | The JSON sent is not a valid Request object  |
+| -32601 | Method not found     | The method does not exist / is not available |
+| -32602 | Invalid params       | Invalid method parameter(s)                  |
+| -32603 | Internal error       | Internal JSON-RPC error                      |
+| -32000 | Account not found    | The compressed account was not found         |
+| -32001 | Invalid account hash | The provided account hash is invalid         |
+
+## Best Practices
+
+<CardGroup cols={2}>
+  <Card title="Commitment Levels" icon="shield-check">
+    Use appropriate commitment levels: `processed` (fastest), `confirmed`
+    (balanced), `finalized` (most reliable)
+  </Card>
+  <Card title="Rate Limiting" icon="gauge-high">
+    Implement retry logic and respect rate limits. Public endpoints: 100 req/s,
+    Private: 1000+ req/s
+  </Card>
+  <Card title="Batch Requests" icon="layer-group">
+    Use batch requests when possible to improve efficiency and reduce API calls
+  </Card>
+  <Card title="Caching" icon="database">
+    Cache frequently accessed data to reduce API calls and improve performance
+  </Card>
+</CardGroup>{" "}

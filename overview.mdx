@@ -1,34 +1,33 @@
-<img
-  className="block dark:hidden"
-  src="/images/hero-light.png"
-  alt="ZK Compression Hero Light"
-/>
+---
+title: "ZK Compression"
+description: "Solana's state compression primitive for building scalable applications"
+---
 
-<img
-  className="hidden dark:block"
-  src="/images/hero-dark.png"
-  alt="ZK Compression Hero Dark"
-/>
-
-## What is ZK Compression?
-
-ZK Compression is a primitive that enables developers to build applications on Solana with massively reduced state costs. By compressing state with zero-knowledge proofs, you can reduce costs by orders of magnitude while maintaining the security and performance of the Solana network.
-
-## Get Started
-
-<CardGroup cols={1}>
-  <Card title="Quick Setup" icon="rocket" href="/introduction/setup">
-    Get up and running with ZK Compression in minutes
-  </Card>
-</CardGroup>
-
-## Resources
+ZK Compression is Solana's state compression primitive that uses zero-knowledge proofs to compress account data into Merkle trees, reducing on-chain storage costs by up to 5,000x while maintaining security, composability, and Solana's performance.
 
 <CardGroup cols={2}>
-  <Card title="API Reference" icon="code" href="/api-reference/json-rpc">
-    Complete API documentation and SDK methods
+  <Card title="Quick Setup" icon="rocket" href="/introduction/setup">
+    Get started with ZK Compression in minutes. Install dependencies and create
+    your first compressed account.
   </Card>
-  <Card title="FAQ" icon="circle-question" href="/help/faq">
-    Common questions and answers
+  <Card
+    title="TypeScript Client"
+    icon="code"
+    href="/integrate/typescript-client"
+  >
+    Learn how to integrate ZK Compression using our TypeScript SDK with complete
+    examples.
+  </Card>
+  <Card
+    title="API Reference"
+    icon="code"
+    href="/api-reference/json-rpc-methods/index"
+  >
+    Explore the complete JSON RPC API reference with all available compression
+    methods.
+  </Card>
+  <Card title="FAQ" icon="circle-question" href="/introduction/faq">
+    Find answers to common questions about ZK Compression and troubleshooting
+    tips.
   </Card>
 </CardGroup>

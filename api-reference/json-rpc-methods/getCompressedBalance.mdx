@@ -1,0 +1,43 @@
+---
+title: "getCompressedBalance"
+description: "Get the compressed SOL balance for a specific owner"
+---
+
+## getCompressedBalance
+
+Get the compressed SOL balance for a specific owner.
+
+### Parameters
+
+- `owner` (string): The owner's public key
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedBalance",
+  "params": ["ownerPublicKey"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "balance": 5000000000,
+    "owner": "ownerPublicKey"
+  }
+}
+```
+
+### Response Fields
+
+| Field     | Type   | Description                        |
+| --------- | ------ | ---------------------------------- |
+| `balance` | number | Compressed SOL balance in lamports |
+| `owner`   | string | The owner's public key             |

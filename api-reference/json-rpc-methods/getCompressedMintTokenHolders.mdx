@@ -1,0 +1,46 @@
+---
+title: "getCompressedMintTokenHolders"
+description: "Get all token holders for a specific compressed mint"
+---
+
+## getCompressedMintTokenHolders
+
+Get all token holders for a specific compressed mint.
+
+### Parameters
+
+- `mint` (string): The mint address
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedMintTokenHolders",
+  "params": ["mintAddress"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "holders": [
+      {
+        "owner": "holder1PublicKey",
+        "balance": 1000000000,
+        "decimals": 9
+      },
+      {
+        "owner": "holder2PublicKey",
+        "balance": 500000000,
+        "decimals": 9
+      }
+    ]
+  }
+}
+```

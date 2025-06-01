@@ -1,0 +1,38 @@
+---
+title: "getCompressedTokenAccountBalance"
+description: "Get the compressed token balance for a specific token account"
+---
+
+## getCompressedTokenAccountBalance
+
+Get the compressed token balance for a specific token account.
+
+### Parameters
+
+- `account` (string): The token account address
+
+### Example Request
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "getCompressedTokenAccountBalance",
+  "params": ["tokenAccountAddress"]
+}
+```
+
+### Example Response
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "result": {
+    "balance": 1000000000,
+    "mint": "mintAddress",
+    "owner": "ownerPublicKey",
+    "decimals": 9
+  }
+}
+```
