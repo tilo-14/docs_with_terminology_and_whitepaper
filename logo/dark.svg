@@ -1,0 +1,11 @@
+<svg width="1200" height="800" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0066ff;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#ff6600;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="100" width="300" height="300" rx="40" ry="40" fill="url(#grad1)" />
+  <text x="340" y="280" fill="white" font-family="Arial" font-size="120" font-weight="bold">ZK</text>
+  <text x="340" y="400" fill="white" font-family="Arial" font-size="120" font-weight="bold">COMPRESSION</text>
+</svg>
