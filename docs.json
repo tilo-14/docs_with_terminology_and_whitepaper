@@ -15,7 +15,22 @@
         "pages": ["overview", "introduction/setup", "introduction/faq"]
       },
       {
-        "group": "Integrate",
+        "group": "How it works",
+        "pages": [
+          "learn-more/in-a-nutshell",
+          {
+            "group": "Deep Dive",
+            "pages": [
+              "learn-more/advanced-concepts",
+              "learn-more/best-practices",
+              "learn-more/performance-optimization",
+              "learn-more/troubleshooting"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "Core",
         "pages": [
           "integrate/typescript-client",
           {
@@ -40,13 +55,17 @@
             ]
           },
           "integrate/token-metadata",
-          "integrate/wallet-support",
           "integrate/addresses-and-urls"
         ]
       },
       {
         "group": "Examples",
-        "pages": ["examples/airdrop", "examples/user-data"]
+        "pages": [
+          "examples/airdrop",
+          "examples/user-data",
+          "examples/wallet-support",
+          "examples/program-template"
+        ]
       }
     ]
   },
