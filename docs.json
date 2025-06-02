@@ -11,24 +11,8 @@
   "navigation": {
     "groups": [
       {
-        "group": "Get Started",
-        "pages": ["overview", "introduction/setup", "introduction/faq"]
-      },
-      {
-        "group": "How it works",
-        "pages": [
-          "learn-more/in-a-nutshell",
-          {
-            "group": "Deep Dive",
-            "pages": [
-              "learn-more/compressed-account-model",
-              "learn-more/state-trees",
-              "learn-more/validity-proofs",
-              "learn-more/lifecycle-of-a-transaction",
-              "learn-more/limitations"
-            ]
-          }
-        ]
+        "group": "Introduction",
+        "pages": ["overview", "introduction/quickstart", "introduction/faq"]
       },
       {
         "group": "Core",
@@ -55,8 +39,8 @@
               "api-reference/json-rpc-methods/getIndexerHealth"
             ]
           },
-          "integrate/token-metadata",
-          "integrate/addresses-and-urls"
+          "integrate/addresses-and-urls",
+          "integrate/token-metadata"
         ]
       },
       {
@@ -66,6 +50,22 @@
           "examples/user-data",
           "examples/wallet-support",
           "examples/program-template"
+        ]
+      },
+      {
+        "group": "How it works",
+        "pages": [
+          "learn-more/in-a-nutshell",
+          {
+            "group": "Deep Dive",
+            "pages": [
+              "learn-more/compressed-account-model",
+              "learn-more/state-trees",
+              "learn-more/validity-proofs",
+              "learn-more/lifecycle-of-a-transaction",
+              "learn-more/limitations"
+            ]
+          }
         ]
       }
     ]

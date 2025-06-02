@@ -1,510 +1,191 @@
 ---
 title: "Token Metadata"
-description: "Add rich metadata to your compressed tokens"
 ---
 
-## Overview
+## Using Token-2022
 
-Token metadata provides essential information about your compressed tokens, including names, symbols, descriptions, and images. This guide covers how to create, manage, and query metadata for compressed tokens.
+You can compress token-2022 accounts of mints with the following mint-extensions:
 
-## Creating Token Metadata
+- MetadataPointer
+- TokenMetadata
+- InterestBearingConfig
+- GroupPointer
+- GroupMemberPointer
+- TokenGroup
+- TokenGroupMember
 
-### Basic Metadata Structure
+All other extensions are not yet supported.
 
-Define metadata following the Metaplex Token Metadata standard:
+If you require support for other mint-extensions, let us know!
 
-```typescript
-interface TokenMetadata {
-  name: string;
-  symbol: string;
-  description: string;
-  image: string;
-  external_url?: string;
-  attributes?: Array<{
-    trait_type: string;
-    value: string | number;
-  }>;
-  properties?: {
-    files?: Array<{
-      uri: string;
-      type: string;
-    }>;
-    category?: string;
-  };
-}
+## Minting, compressing, and transferring tokens with Token-2022 Metadata
 
-const metadata: TokenMetadata = {
-  name: "Compressed Gold Token",
-  symbol: "cGOLD",
-  description: "A compressed token representing digital gold",
-  image: "https://example.com/images/gold-token.png",
-  external_url: "https://example.com/tokens/cgold",
-  attributes: [
-    {
-      trait_type: "Rarity",
-      value: "Legendary",
-    },
-    {
-      trait_type: "Purity",
-      value: 99.9,
-    },
-  ],
-  properties: {
-    files: [
-      {
-        uri: "https://example.com/images/gold-token.png",
-        type: "image/png",
-      },
-    ],
-    category: "image",
-  },
-};
-```
+You need the following SDK versions:
 
-### Creating a Mint with Metadata
-
-Create a compressed token mint with metadata:
+- `@lightprotocol/stateless.js` ≥ 0.21.0
+- `@lightprotocol/compressed-token` ≥ 0.21.0
+- `@solana/web3.js` ≥ 1.95.3
 
 ```typescript
+import { confirmTx, createRpc } from "@lightprotocol/stateless.js";
 import {
-  createMintWithMetadata,
-  uploadMetadata,
-} from "@lightprotocol/zk-compression-sdk";
+  compress,
+  createTokenPool,
+  transfer,
+} from "@lightprotocol/compressed-token";
+import {
+  getOrCreateAssociatedTokenAccount,
+  mintTo as mintToSpl,
+  TOKEN_2022_PROGRAM_ID,
+  createInitializeMetadataPointerInstruction,
+  createInitializeMintInstruction,
+  ExtensionType,
+  getMintLen,
+  LENGTH_SIZE,
+  TYPE_SIZE,
+} from "@solana/spl-token";
+import {
+  Keypair,
+  sendAndConfirmTransaction,
+  SystemProgram,
+  Transaction,
+} from "@solana/web3.js";
+import {
+  createInitializeInstruction,
+  pack,
+  TokenMetadata,
+} from "@solana/spl-token-metadata";
+import dotenv from "dotenv";
+import bs58 from "bs58";
+dotenv.config();
 
-async function createTokenWithMetadata(metadata: TokenMetadata) {
-  // 1. Upload metadata to IPFS or Arweave
-  const metadataUri = await uploadMetadata({
-    metadata,
-    storage: "ipfs", // or 'arweave'
-  });
+// set these values in your .env file
+const payer = Keypair.fromSecretKey(bs58.decode(process.env.PAYER_KEYPAIR!));
+const RPC_ENDPOINT = process.env.RPC_ENDPOINT!;
+const connection = createRpc(RPC_ENDPOINT);
 
-  console.log("📄 Metadata uploaded to:", metadataUri);
+(async () => {
+  const mint = Keypair.generate();
+  const decimals = 9;
 
-  // 2. Create mint with metadata
-  const mint = await createMintWithMetadata({
+  const metadata: TokenMetadata = {
+    mint: mint.publicKey,
+    name: "name",
+    symbol: "symbol",
+    uri: "uri",
+    additionalMetadata: [["key", "value"]],
+  };
+
+  const mintLen = getMintLen([ExtensionType.MetadataPointer]);
+
+  const metadataLen = TYPE_SIZE + LENGTH_SIZE + pack(metadata).length;
+
+  // airdrop to pay gas
+  await confirmTx(
     connection,
-    payer,
-    mintAuthority: payer.publicKey,
-    decimals: 9,
-    metadata: {
+    await connection.requestAirdrop(payer.publicKey, 1e7)
+  );
+
+  const mintLamports = await connection.getMinimumBalanceForRentExemption(
+    mintLen + metadataLen
+  );
+  const mintTransaction = new Transaction().add(
+    SystemProgram.createAccount({
+      fromPubkey: payer.publicKey,
+      newAccountPubkey: mint.publicKey,
+      space: mintLen,
+      lamports: mintLamports,
+      programId: TOKEN_2022_PROGRAM_ID,
+    }),
+    createInitializeMetadataPointerInstruction(
+      mint.publicKey,
+      payer.publicKey,
+      mint.publicKey,
+      TOKEN_2022_PROGRAM_ID
+    ),
+    createInitializeMintInstruction(
+      mint.publicKey,
+      decimals,
+      payer.publicKey,
+      null,
+      TOKEN_2022_PROGRAM_ID
+    ),
+    createInitializeInstruction({
+      programId: TOKEN_2022_PROGRAM_ID,
+      mint: mint.publicKey,
+      metadata: mint.publicKey,
       name: metadata.name,
       symbol: metadata.symbol,
-      uri: metadataUri,
-      sellerFeeBasisPoints: 500, // 5% royalty
-      creators: [
-        {
-          address: payer.publicKey,
-          verified: true,
-          share: 100,
-        },
-      ],
-    },
-  });
-
-  console.log("✅ Created mint with metadata:", mint.toBase58());
-  return { mint, metadataUri };
-}
-```
-
-## Updating Metadata
-
-### Update Existing Metadata
-
-Update metadata for an existing compressed token:
-
-```typescript
-import { updateTokenMetadata } from "@lightprotocol/zk-compression-sdk";
-
-async function updateMetadata(
-  mint: PublicKey,
-  newMetadata: Partial<TokenMetadata>
-) {
-  // 1. Get current metadata
-  const currentMetadata = await getTokenMetadata({
-    connection,
-    mint,
-  });
-
-  // 2. Merge with new metadata
-  const updatedMetadata = {
-    ...currentMetadata,
-    ...newMetadata,
-  };
-
-  // 3. Upload updated metadata
-  const newMetadataUri = await uploadMetadata({
-    metadata: updatedMetadata,
-    storage: "ipfs",
-  });
-
-  // 4. Update on-chain metadata
-  const signature = await updateTokenMetadata({
-    connection,
+      uri: metadata.uri,
+      mintAuthority: payer.publicKey,
+      updateAuthority: payer.publicKey,
+    })
+  );
+  const txId = await sendAndConfirmTransaction(connection, mintTransaction, [
     payer,
     mint,
-    authority: payer,
-    newUri: newMetadataUri,
-  });
+  ]);
 
-  console.log("✅ Metadata updated:", signature);
-  return newMetadataUri;
-}
-```
+  console.log(`txId: ${txId}`);
 
-### Batch Metadata Updates
-
-Update metadata for multiple tokens efficiently:
-
-```typescript
-async function batchUpdateMetadata(
-  updates: Array<{
-    mint: PublicKey;
-    metadata: Partial<TokenMetadata>;
-  }>
-) {
-  // Upload all metadata in parallel
-  const uploadPromises = updates.map(async (update) => {
-    const metadataUri = await uploadMetadata({
-      metadata: update.metadata,
-      storage: "ipfs",
-    });
-
-    return {
-      mint: update.mint,
-      metadataUri,
-    };
-  });
-
-  const uploadResults = await Promise.all(uploadPromises);
-
-  // Update on-chain metadata in batches
-  const signature = await batchUpdateTokenMetadata({
+  // register the mint with the Compressed-Token program
+  const txId2 = await createTokenPool(
     connection,
     payer,
-    authority: payer,
-    updates: uploadResults,
-  });
+    mint.publicKey,
+    undefined,
+    TOKEN_2022_PROGRAM_ID
+  );
+  console.log(`register-mint success! txId: ${txId2}`);
 
-  console.log(`✅ Updated metadata for ${updates.length} tokens`);
-  return signature;
-}
-```
-
-## Querying Metadata
-
-### Get Token Metadata
-
-Retrieve metadata for a compressed token:
-
-```typescript
-import { getTokenMetadata } from "@lightprotocol/zk-compression-sdk";
-
-async function getMetadata(mint: PublicKey) {
-  try {
-    // Get on-chain metadata account
-    const metadataAccount = await getTokenMetadata({
-      connection,
-      mint,
-    });
-
-    console.log("On-chain metadata:", {
-      name: metadataAccount.name,
-      symbol: metadataAccount.symbol,
-      uri: metadataAccount.uri,
-    });
-
-    // Fetch off-chain metadata
-    const response = await fetch(metadataAccount.uri);
-    const offChainMetadata = await response.json();
-
-    console.log("Off-chain metadata:", offChainMetadata);
-
-    return {
-      onChain: metadataAccount,
-      offChain: offChainMetadata,
-    };
-  } catch (error) {
-    console.error("Error fetching metadata:", error);
-    return null;
-  }
-}
-```
-
-### Search Tokens by Metadata
-
-Search for tokens based on metadata attributes:
-
-```typescript
-import { searchTokensByMetadata } from "@lightprotocol/zk-compression-sdk";
-
-async function searchTokens(criteria: {
-  name?: string;
-  symbol?: string;
-  creator?: PublicKey;
-  attributes?: Array<{
-    trait_type: string;
-    value: string | number;
-  }>;
-}) {
-  const results = await searchTokensByMetadata({
+  const ata = await getOrCreateAssociatedTokenAccount(
     connection,
-    criteria,
-    limit: 100,
-  });
+    payer,
+    mint.publicKey,
+    payer.publicKey,
+    undefined,
+    undefined,
+    undefined,
+    TOKEN_2022_PROGRAM_ID
+  );
 
-  console.log(`Found ${results.length} matching tokens`);
+  console.log(`ATA: ${ata.address}`);
+  // Mint SPL
+  const mintTxId = await mintToSpl(
+    connection,
+    payer,
+    mint.publicKey,
+    ata.address,
+    payer.publicKey,
+    1e5,
+    undefined,
+    undefined,
+    TOKEN_2022_PROGRAM_ID
+  );
+  console.log(`mint-spl success! txId: ${mintTxId}`);
 
-  results.forEach((token, index) => {
-    console.log(`Token ${index + 1}:`);
-    console.log(`  Mint: ${token.mint}`);
-    console.log(`  Name: ${token.metadata.name}`);
-    console.log(`  Symbol: ${token.metadata.symbol}`);
-  });
+  const compressedTokenTxId = await compress(
+    connection,
+    payer,
+    mint.publicKey,
+    1e5,
+    payer,
+    ata.address,
+    payer.publicKey
+  );
+  console.log(`compressed-token success! txId: ${compressedTokenTxId}`);
 
-  return results;
-}
-
-// Example searches
-await searchTokens({ symbol: "cGOLD" });
-await searchTokens({ creator: payer.publicKey });
-await searchTokens({
-  attributes: [{ trait_type: "Rarity", value: "Legendary" }],
-});
+  const transferCompressedTxId = await transfer(
+    connection,
+    payer,
+    mint.publicKey,
+    1e5,
+    payer,
+    payer.publicKey // self-transfer
+  );
+  console.log(`transfer-compressed success! txId: ${transferCompressedTxId}`);
+})();
 ```
-
-## Advanced Metadata Features
-
-### Dynamic Metadata
-
-Create metadata that changes based on token state:
-
-```typescript
-class DynamicMetadata {
-  private baseMetadata: TokenMetadata;
-
-  constructor(baseMetadata: TokenMetadata) {
-    this.baseMetadata = baseMetadata;
-  }
-
-  async generateMetadata(
-    mint: PublicKey,
-    owner: PublicKey
-  ): Promise<TokenMetadata> {
-    // Get current token state
-    const balance = await getCompressedTokenBalance({
-      connection,
-      mint,
-      owner,
-    });
-
-    const accountHistory = await getCompressedAccountHistory({
-      connection,
-      accountHash: mint.toBase58(),
-    });
-
-    // Generate dynamic attributes
-    const dynamicAttributes = [
-      {
-        trait_type: "Balance",
-        value: balance / 10 ** 9,
-      },
-      {
-        trait_type: "Transaction Count",
-        value: accountHistory.length,
-      },
-      {
-        trait_type: "Age (days)",
-        value: Math.floor(
-          (Date.now() - accountHistory[0]?.timestamp) / (1000 * 60 * 60 * 24)
-        ),
-      },
-    ];
-
-    return {
-      ...this.baseMetadata,
-      attributes: [
-        ...(this.baseMetadata.attributes || []),
-        ...dynamicAttributes,
-      ],
-    };
-  }
-}
-```
-
-### Metadata Validation
-
-Validate metadata before uploading:
-
-```typescript
-import Ajv from "ajv";
-
-const metadataSchema = {
-  type: "object",
-  required: ["name", "symbol", "description", "image"],
-  properties: {
-    name: {
-      type: "string",
-      minLength: 1,
-      maxLength: 32,
-    },
-    symbol: {
-      type: "string",
-      minLength: 1,
-      maxLength: 10,
-    },
-    description: {
-      type: "string",
-      maxLength: 500,
-    },
-    image: {
-      type: "string",
-      format: "uri",
-    },
-    external_url: {
-      type: "string",
-      format: "uri",
-    },
-    attributes: {
-      type: "array",
-      items: {
-        type: "object",
-        required: ["trait_type", "value"],
-        properties: {
-          trait_type: { type: "string" },
-          value: { type: ["string", "number"] },
-        },
-      },
-    },
-  },
-};
-
-function validateMetadata(metadata: TokenMetadata): boolean {
-  const ajv = new Ajv({ formats: require("ajv-formats") });
-  const validate = ajv.compile(metadataSchema);
-
-  const isValid = validate(metadata);
-
-  if (!isValid) {
-    console.error("Metadata validation errors:", validate.errors);
-    return false;
-  }
-
-  console.log("✅ Metadata is valid");
-  return true;
-}
-```
-
-## Storage Options
-
-### IPFS Storage
-
-Store metadata on IPFS for decentralization:
-
-```typescript
-import { create } from "ipfs-http-client";
-
-class IPFSStorage {
-  private client;
-
-  constructor(url: string = "https://ipfs.infura.io:5001") {
-    this.client = create({ url });
-  }
-
-  async uploadMetadata(metadata: TokenMetadata): Promise<string> {
-    try {
-      const result = await this.client.add(JSON.stringify(metadata, null, 2));
-
-      const uri = `https://ipfs.io/ipfs/${result.cid}`;
-      console.log("📄 Uploaded to IPFS:", uri);
-
-      return uri;
-    } catch (error) {
-      console.error("IPFS upload failed:", error);
-      throw error;
-    }
-  }
-
-  async uploadImage(imageBuffer: Buffer): Promise<string> {
-    try {
-      const result = await this.client.add(imageBuffer);
-      return `https://ipfs.io/ipfs/${result.cid}`;
-    } catch (error) {
-      console.error("Image upload failed:", error);
-      throw error;
-    }
-  }
-}
-```
-
-### Arweave Storage
-
-Store metadata on Arweave for permanent storage:
-
-```typescript
-import Arweave from "arweave";
-
-class ArweaveStorage {
-  private arweave;
-  private wallet;
-
-  constructor(walletKey: any) {
-    this.arweave = Arweave.init({
-      host: "arweave.net",
-      port: 443,
-      protocol: "https",
-    });
-    this.wallet = walletKey;
-  }
-
-  async uploadMetadata(metadata: TokenMetadata): Promise<string> {
-    try {
-      const transaction = await this.arweave.createTransaction(
-        {
-          data: JSON.stringify(metadata, null, 2),
-        },
-        this.wallet
-      );
-
-      transaction.addTag("Content-Type", "application/json");
-      transaction.addTag("App-Name", "ZK-Compression-Token");
-
-      await this.arweave.transactions.sign(transaction, this.wallet);
-      await this.arweave.transactions.post(transaction);
-
-      const uri = `https://arweave.net/${transaction.id}`;
-      console.log("📄 Uploaded to Arweave:", uri);
-
-      return uri;
-    } catch (error) {
-      console.error("Arweave upload failed:", error);
-      throw error;
-    }
-  }
-}
-```
-
-## Best Practices
-
-### 1. Metadata Design
-
-- Keep names and symbols concise but descriptive
-- Use high-quality images (minimum 512x512px)
-- Include relevant attributes for discoverability
-- Follow established metadata standards
-
-### 2. Storage Considerations
-
-- Use IPFS for decentralization and cost-effectiveness
-- Use Arweave for permanent, immutable storage
-- Always validate metadata before uploading
-- Consider backup storage solutions
-
-### 3. Performance Optimization
-
-- Cache frequently accessed metadata
-- Use CDNs for image delivery
-- Implement lazy loading for metadata-heavy UIs
-- Batch metadata operations when possible
 
 ## Next Steps
 
