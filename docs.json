@@ -21,10 +21,11 @@
           {
             "group": "Deep Dive",
             "pages": [
-              "learn-more/advanced-concepts",
-              "learn-more/best-practices",
-              "learn-more/performance-optimization",
-              "learn-more/troubleshooting"
+              "learn-more/compressed-account-model",
+              "learn-more/state-trees",
+              "learn-more/validity-proofs",
+              "learn-more/lifecycle-of-a-transaction",
+              "learn-more/limitations"
             ]
           }
         ]

@@ -1,71 +1,86 @@
 ---
 title: "FAQ"
-description: "Frequently asked questions about ZK Compression"
 ---
 
-## Frequently Asked Questions
-
-### General Questions
-
 <AccordionGroup>
-  <Accordion title="What is ZK Compression?">
-    ZK Compression is a technology that allows for efficient compression of data on the Solana blockchain using zero-knowledge proofs, significantly reducing storage costs while maintaining security and verifiability.
+  <Accordion title="Why should I care?">
+    Because rent is expensive. On Solana, each token account costs ~0.002 SOL in rent. zkCompressed accounts avoid this entirely. If your app involves lots of users, tokens, or accounts—this matters.
+  </Accordion>
+
+  <Accordion title="How much cheaper is it?">
+    Typical savings: **1,000x–5,000x cheaper** per account.
+
+    Creating 100 token accounts the normal way costs ~0.2 SOL. With zkCompression, it's ~0.00004 SOL.
+
   </Accordion>
 
 {" "}
 
-<Accordion title="How does ZK Compression reduce costs?">
-  By compressing account data and using zero-knowledge proofs to verify state
-  transitions, ZK Compression can reduce storage costs by up to 99% compared to
-  traditional on-chain storage.
+<Accordion title="Who is this for?">
+  zkCompression is perfect for: - **Airdrop Tools**: Apps that need to create
+  thousands of token accounts for mass distributions - **Consumer Apps**:
+  Applications doing reward distribution or gamified tokens - **DePIN
+  Protocols**: Protocols managing long-tail devices/users at scale -
+  **Infrastructure Providers**: Providers who want to offer rent-free state to
+  users - **Any Scalable App**: Any application needing scalable, low-cost
+  account creation
 </Accordion>
-
-  <Accordion title="Is ZK Compression compatible with existing Solana programs?">
-    ZK Compression is designed to be compatible with existing Solana infrastructure while providing additional compression capabilities through specialized SDKs and tools.
-  </Accordion>
-</AccordionGroup>
-
-### Technical Questions
-
-<AccordionGroup>
-  <Accordion title="What are compressed tokens?">
-    Compressed tokens are SPL tokens that use ZK Compression to store their state efficiently while maintaining full functionality and composability with other Solana programs.
-  </Accordion>
 
 {" "}
 
-<Accordion title="How do I create compressed tokens?">
-  You can create compressed tokens using the ZK Compression SDK. See our [Token
-  Metadata guide](/integrate/token-metadata) for detailed instructions.
+<Accordion title="What can I compress?">
+  - **Token Accounts**: SPL-compatible token accounts via the compressed-token
+  package - **Custom Account Types**: Any custom account type with deterministic
+  structure - **App-Specific State**: Structured app state like identity,
+  reputation, game data
 </Accordion>
-
-  <Accordion title="What programming languages are supported?">
-    Currently, we provide SDKs for TypeScript/JavaScript and Rust. Other language bindings may be available in the future.
-  </Accordion>
-</AccordionGroup>
-
-### Development Questions
-
-<AccordionGroup>
-  <Accordion title="Where can I find code examples?">
-    Check out our [Examples](/examples/airdrop) section for practical implementations, including airdrops and user data management. You can also explore our [Token Metadata](/integrate/token-metadata) and [API Reference](/api-reference/json-rpc-methods/index) sections.
-  </Accordion>
 
 {" "}
 
-<Accordion title="How do I test ZK Compression features?">
-  You can test ZK Compression features on Solana devnet and testnet. See our
-  [Setup guide](/introduction/setup) for development environment configuration.
+<Accordion title="What can't I compress?">
+  - **Arbitrary Program State**: Dynamic or pointer-based data structures that
+  change unpredictably - **Concurrent Mutable Data**: Data that needs to be
+  mutable by multiple parties concurrently without coordination - **Complex
+  Data**: Data too large or complex to prove efficiently (e.g. full game world
+  state)
 </Accordion>
 
-  <Accordion title="Is there a sandbox or playground?">
-    We're working on providing interactive examples and a playground environment. Check back soon for updates.
+{" "}
+
+<Accordion title="Do I need to write my own ZK circuits?">
+  **No.** zkCompression provides battle-tested circuits and client SDKs. You
+  interact with simple APIs like `mintCompressed()` or
+  `createCompressedAccount()`.
+</Accordion>
+
+{" "}
+
+<Accordion title="Can I still use regular Solana instructions?">
+  **Yes.** Compressed accounts are compatible with normal Solana instructions.
+  You can mix compressed and uncompressed accounts in the same transaction.
+</Accordion>
+
+{" "}
+
+<Accordion title="Is this a separate chain or L2?">
+  **No.** Everything runs on Solana L1. zkCompression simply lets you treat
+  Solana as a state root layer while keeping the actual data off-chain.
+</Accordion>
+
+{" "}
+
+<Accordion title="Where is the data stored?">
+  Compressed data is stored off-chain in a distributed network of RPC providers,
+  with state commitments anchored on Solana L1. This ensures data availability
+  while dramatically reducing costs.
+</Accordion>
+
+  <Accordion title="Is this Mainnet-ready?">
+    **Yes.** zkCompression is live on Solana Mainnet and battle-tested. SDKs and proof systems are stable, with ongoing optimizations.
   </Accordion>
 </AccordionGroup>
 
 ## Need More Help?
-
-Can't find what you're looking for? Here are additional resources:
 
 <CardGroup cols={2}>
   <Card
