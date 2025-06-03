@@ -1,18 +1,74 @@
 ---
 title: "getLatestCompressionSignatures"
 description: "Get the latest compression signatures"
+mode: "custom"
 ---
 
-## getLatestCompressionSignatures
+<div className="method-page-container">
+  <div className="method-header">
+    <h1 className="method-title">getLatestCompressionSignatures</h1>
+    <p className="method-description">Get the latest compression signatures.</p>
+  </div>
 
-Get the latest compression signatures.
+{" "}
+<div className="method-params method-section">
+  <h3>Parameters</h3>
+  <ul>
+    <li>
+      <code>limit</code> (number, optional): Maximum number of signatures to
+      return
+    </li>
+  </ul>
+</div>
 
-### Parameters
+{" "}
+<div className="method-response method-section">
+  <h3>Response Fields</h3>
+  <table className="method-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>signatures</code>
+        </td>
+        <td>array</td>
+        <td>Array of signature objects</td>
+      </tr>
+      <tr>
+        <td>
+          <code>signature</code>
+        </td>
+        <td>string</td>
+        <td>Transaction signature</td>
+      </tr>
+      <tr>
+        <td>
+          <code>slot</code>
+        </td>
+        <td>number</td>
+        <td>Slot number when transaction occurred</td>
+      </tr>
+      <tr>
+        <td>
+          <code>blockTime</code>
+        </td>
+        <td>number</td>
+        <td>Unix timestamp of the block</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-- `limit` (number, optional): Maximum number of signatures to return
-
-### Example Request
-
+  <div className="method-examples">
+    <div className="example-request method-section">
+      <h3>Example Request</h3>
+      <div className="method-code">
 ```json
 {
   "jsonrpc": "2.0",
@@ -21,8 +77,12 @@ Get the latest compression signatures.
   "params": [100]
 }
 ```
+      </div>
+    </div>
 
-### Example Response
+    <div className="example-response method-section">
+      <h3>Example Response</h3>
+      <div className="method-code">
 
 ```json
 {
@@ -44,3 +104,9 @@ Get the latest compression signatures.
   }
 }
 ```
+
+      </div>
+    </div>
+
+  </div>
+</div>

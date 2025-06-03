@@ -1,0 +1,176 @@
+/* Custom CSS for JSON RPC Method Pages - Horizontal Grid Layout */
+
+/* Main container for method pages */
+.method-page-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+/* Method header section */
+.method-header {
+  grid-column: 1 / -1;
+  margin-bottom: 1rem;
+}
+
+.method-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--primary);
+}
+
+.method-description {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+}
+
+/* Parameters and Response sections */
+.method-params {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.method-response {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Example sections */
+.method-examples {
+  grid-column: 1 / -1;
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+.example-request {
+  grid-column: 1;
+}
+
+.example-response {
+  grid-column: 2;
+}
+
+/* Section styling */
+.method-section {
+  background: var(--background-secondary, #f8f9fa);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color, #e1e5e9);
+}
+
+.method-section h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary);
+  padding-bottom: 0.5rem;
+}
+
+/* Table styling for parameters and response fields */
+.method-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.method-table th,
+.method-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color, #e1e5e9);
+}
+
+.method-table th {
+  background-color: var(--background-tertiary, #f1f3f4);
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Code block styling */
+.method-code {
+  margin: 1rem 0;
+}
+
+/* Error codes section */
+.method-errors {
+  grid-column: 1 / -1;
+  grid-row: 4;
+  margin-top: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .method-page-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 1.5rem;
+    padding: 1rem;
+  }
+
+  .method-header {
+    grid-column: 1;
+  }
+
+  .method-params {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .method-response {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .method-examples {
+    grid-column: 1;
+    grid-row: 4;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .example-request,
+  .example-response {
+    grid-column: 1;
+  }
+
+  .method-errors {
+    grid-column: 1;
+    grid-row: 5;
+  }
+}
+
+@media (max-width: 768px) {
+  .method-page-container {
+    padding: 0.5rem;
+    gap: 1rem;
+  }
+
+  .method-section {
+    padding: 1rem;
+  }
+
+  .method-title {
+    font-size: 1.5rem;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .method-section {
+    background: var(--background-secondary, #1a1a1a);
+    border-color: var(--border-color, #333);
+  }
+
+  .method-table th {
+    background-color: var(--background-tertiary, #2a2a2a);
+  }
+} 

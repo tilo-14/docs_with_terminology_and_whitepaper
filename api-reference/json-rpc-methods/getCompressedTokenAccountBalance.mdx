@@ -1,18 +1,73 @@
 ---
 title: "getCompressedTokenAccountBalance"
 description: "Get the compressed token balance for a specific token account"
+mode: "custom"
 ---
 
-## getCompressedTokenAccountBalance
+<div className="method-page-container">
+  <div className="method-header">
+    <h1 className="method-title">getCompressedTokenAccountBalance</h1>
+    <p className="method-description">Get the compressed token balance for a specific token account.</p>
+  </div>
 
-Get the compressed token balance for a specific token account.
+{" "}
+<div className="method-params method-section">
+  <h3>Parameters</h3>
+  <ul>
+    <li>
+      <code>account</code> (string): The token account address
+    </li>
+  </ul>
+</div>
 
-### Parameters
+{" "}
+<div className="method-response method-section">
+  <h3>Response Fields</h3>
+  <table className="method-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>balance</code>
+        </td>
+        <td>number</td>
+        <td>Token balance</td>
+      </tr>
+      <tr>
+        <td>
+          <code>mint</code>
+        </td>
+        <td>string</td>
+        <td>The mint address</td>
+      </tr>
+      <tr>
+        <td>
+          <code>owner</code>
+        </td>
+        <td>string</td>
+        <td>The owner's public key</td>
+      </tr>
+      <tr>
+        <td>
+          <code>decimals</code>
+        </td>
+        <td>number</td>
+        <td>Number of decimal places</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-- `account` (string): The token account address
-
-### Example Request
-
+  <div className="method-examples">
+    <div className="example-request method-section">
+      <h3>Example Request</h3>
+      <div className="method-code">
 ```json
 {
   "jsonrpc": "2.0",
@@ -21,8 +76,12 @@ Get the compressed token balance for a specific token account.
   "params": ["tokenAccountAddress"]
 }
 ```
+      </div>
+    </div>
 
-### Example Response
+    <div className="example-response method-section">
+      <h3>Example Response</h3>
+      <div className="method-code">
 
 ```json
 {
@@ -36,3 +95,9 @@ Get the compressed token balance for a specific token account.
   }
 }
 ```
+
+      </div>
+    </div>
+
+  </div>
+</div>

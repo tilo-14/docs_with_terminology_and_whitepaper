@@ -1,18 +1,87 @@
 ---
 title: "getCompressedAccountsByOwner"
 description: "Get all compressed accounts owned by a specific address"
+mode: "custom"
 ---
 
-## getCompressedAccountsByOwner
+<div className="method-page-container">
+  <div className="method-header">
+    <h1 className="method-title">getCompressedAccountsByOwner</h1>
+    <p className="method-description">Get all compressed accounts owned by a specific address.</p>
+  </div>
 
-Get all compressed accounts owned by a specific address.
+{" "}
+<div className="method-params method-section">
+  <h3>Parameters</h3>
+  <ul>
+    <li>
+      <code>owner</code> (string): The owner's public key
+    </li>
+  </ul>
+</div>
 
-### Parameters
+{" "}
+<div className="method-response method-section">
+  <h3>Response Fields</h3>
+  <table className="method-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>accounts</code>
+        </td>
+        <td>array</td>
+        <td>Array of compressed accounts</td>
+      </tr>
+      <tr>
+        <td>
+          <code>hash</code>
+        </td>
+        <td>string</td>
+        <td>The hash of the compressed account</td>
+      </tr>
+      <tr>
+        <td>
+          <code>data</code>
+        </td>
+        <td>string</td>
+        <td>Base64 encoded account data</td>
+      </tr>
+      <tr>
+        <td>
+          <code>owner</code>
+        </td>
+        <td>string</td>
+        <td>The owner's public key</td>
+      </tr>
+      <tr>
+        <td>
+          <code>lamports</code>
+        </td>
+        <td>number</td>
+        <td>Account balance in lamports</td>
+      </tr>
+      <tr>
+        <td>
+          <code>executable</code>
+        </td>
+        <td>boolean</td>
+        <td>Whether the account is executable</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-- `owner` (string): The owner's public key
-
-### Example Request
-
+  <div className="method-examples">
+    <div className="example-request method-section">
+      <h3>Example Request</h3>
+      <div className="method-code">
 ```json
 {
   "jsonrpc": "2.0",
@@ -21,8 +90,12 @@ Get all compressed accounts owned by a specific address.
   "params": ["ownerPublicKey"]
 }
 ```
+      </div>
+    </div>
 
-### Example Response
+    <div className="example-response method-section">
+      <h3>Example Response</h3>
+      <div className="method-code">
 
 ```json
 {
@@ -49,13 +122,8 @@ Get all compressed accounts owned by a specific address.
 }
 ```
 
-### Response Fields
+      </div>
+    </div>
 
-| Field        | Type    | Description                        |
-| ------------ | ------- | ---------------------------------- |
-| `accounts`   | array   | Array of compressed accounts       |
-| `hash`       | string  | The hash of the compressed account |
-| `data`       | string  | Base64 encoded account data        |
-| `owner`      | string  | The owner's public key             |
-| `lamports`   | number  | Account balance in lamports        |
-| `executable` | boolean | Whether the account is executable  |
+  </div>
+</div>

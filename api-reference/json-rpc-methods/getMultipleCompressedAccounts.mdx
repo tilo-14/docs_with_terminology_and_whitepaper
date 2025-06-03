@@ -1,18 +1,81 @@
 ---
 title: "getMultipleCompressedAccounts"
 description: "Get multiple compressed accounts in a single request"
+mode: "custom"
 ---
 
-## getMultipleCompressedAccounts
+<div className="method-page-container">
+  <div className="method-header">
+    <h1 className="method-title">getMultipleCompressedAccounts</h1>
+    <p className="method-description">Get multiple compressed accounts in a single request.</p>
+  </div>
 
-Get multiple compressed accounts in a single request.
+{" "}
+<div className="method-params method-section">
+  <h3>Parameters</h3>
+  <ul>
+    <li>
+      <code>accountHashes</code> (array): Array of account hashes
+    </li>
+  </ul>
+</div>
 
-### Parameters
+{" "}
+<div className="method-response method-section">
+  <h3>Response Fields</h3>
+  <p>Returns an array of compressed account objects, each containing:</p>
+  <table className="method-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>hash</code>
+        </td>
+        <td>string</td>
+        <td>The hash of the compressed account</td>
+      </tr>
+      <tr>
+        <td>
+          <code>data</code>
+        </td>
+        <td>string</td>
+        <td>Base64 encoded account data</td>
+      </tr>
+      <tr>
+        <td>
+          <code>owner</code>
+        </td>
+        <td>string</td>
+        <td>The owner's public key</td>
+      </tr>
+      <tr>
+        <td>
+          <code>lamports</code>
+        </td>
+        <td>number</td>
+        <td>Account balance in lamports</td>
+      </tr>
+      <tr>
+        <td>
+          <code>executable</code>
+        </td>
+        <td>boolean</td>
+        <td>Whether the account is executable</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-- `accountHashes` (array): Array of account hashes
-
-### Example Request
-
+  <div className="method-examples">
+    <div className="example-request method-section">
+      <h3>Example Request</h3>
+      <div className="method-code">
 ```json
 {
   "jsonrpc": "2.0",
@@ -21,8 +84,12 @@ Get multiple compressed accounts in a single request.
   "params": [["hash1", "hash2", "hash3"]]
 }
 ```
+      </div>
+    </div>
 
-### Example Response
+    <div className="example-response method-section">
+      <h3>Example Response</h3>
+      <div className="method-code">
 
 ```json
 {
@@ -48,3 +115,9 @@ Get multiple compressed accounts in a single request.
   }
 }
 ```
+
+      </div>
+    </div>
+
+  </div>
+</div>

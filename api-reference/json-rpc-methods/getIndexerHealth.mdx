@@ -1,18 +1,69 @@
 ---
 title: "getIndexerHealth"
 description: "Get the health status of the indexer"
+mode: "custom"
 ---
 
-## getIndexerHealth
+<div className="method-page-container">
+  <div className="method-header">
+    <h1 className="method-title">getIndexerHealth</h1>
+    <p className="method-description">Get the health status of the indexer.</p>
+  </div>
 
-Get the health status of the indexer.
+{" "}
+<div className="method-params method-section">
+  <h3>Parameters</h3>
+  <p>None</p>
+</div>
 
-### Parameters
+{" "}
+<div className="method-response method-section">
+  <h3>Response Fields</h3>
+  <table className="method-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>status</code>
+        </td>
+        <td>string</td>
+        <td>Health status (healthy/degraded/unhealthy)</td>
+      </tr>
+      <tr>
+        <td>
+          <code>lastUpdate</code>
+        </td>
+        <td>number</td>
+        <td>Unix timestamp of last update</td>
+      </tr>
+      <tr>
+        <td>
+          <code>slot</code>
+        </td>
+        <td>number</td>
+        <td>Current indexer slot</td>
+      </tr>
+      <tr>
+        <td>
+          <code>version</code>
+        </td>
+        <td>string</td>
+        <td>Indexer version</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-None
-
-### Example Request
-
+  <div className="method-examples">
+    <div className="example-request method-section">
+      <h3>Example Request</h3>
+      <div className="method-code">
 ```json
 {
   "jsonrpc": "2.0",
@@ -21,8 +72,12 @@ None
   "params": []
 }
 ```
+      </div>
+    </div>
 
-### Example Response
+    <div className="example-response method-section">
+      <h3>Example Response</h3>
+      <div className="method-code">
 
 ```json
 {
@@ -37,11 +92,8 @@ None
 }
 ```
 
-### Response Fields
+      </div>
+    </div>
 
-| Field        | Type   | Description                                |
-| ------------ | ------ | ------------------------------------------ |
-| `status`     | string | Health status (healthy/degraded/unhealthy) |
-| `lastUpdate` | number | Unix timestamp of last update              |
-| `slot`       | number | Current indexer slot                       |
-| `version`    | string | Indexer version                            |
+  </div>
+</div>

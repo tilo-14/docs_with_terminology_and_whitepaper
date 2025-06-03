@@ -1,18 +1,48 @@
 ---
 title: "getIndexerSlot"
 description: "Get the current indexer slot"
+mode: "custom"
 ---
 
-## getIndexerSlot
+<div className="method-page-container">
+  <div className="method-header">
+    <h1 className="method-title">getIndexerSlot</h1>
+    <p className="method-description">Get the current indexer slot.</p>
+  </div>
 
-Get the current indexer slot.
+{" "}
+<div className="method-params method-section">
+  <h3>Parameters</h3>
+  <p>None</p>
+</div>
 
-### Parameters
+{" "}
+<div className="method-response method-section">
+  <h3>Response Fields</h3>
+  <table className="method-table">
+    <thead>
+      <tr>
+        <th>Field</th>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <code>slot</code>
+        </td>
+        <td>number</td>
+        <td>The current indexer slot number</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
-None
-
-### Example Request
-
+  <div className="method-examples">
+    <div className="example-request method-section">
+      <h3>Example Request</h3>
+      <div className="method-code">
 ```json
 {
   "jsonrpc": "2.0",
@@ -21,8 +51,12 @@ None
   "params": []
 }
 ```
+      </div>
+    </div>
 
-### Example Response
+    <div className="example-response method-section">
+      <h3>Example Response</h3>
+      <div className="method-code">
 
 ```json
 {
@@ -34,8 +68,8 @@ None
 }
 ```
 
-### Response Fields
+      </div>
+    </div>
 
-| Field  | Type   | Description                     |
-| ------ | ------ | ------------------------------- |
-| `slot` | number | The current indexer slot number |
+  </div>
+</div>
