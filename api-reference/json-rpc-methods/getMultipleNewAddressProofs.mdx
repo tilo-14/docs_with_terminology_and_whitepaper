@@ -1,12 +1,12 @@
 ---
-title: "getCompressedBalance"
-description: "Returns the balance for the compressed account with the given address or hash"
+title: "getMultipleNewAddressProofs"
+description: "Returns proofs that the new addresses are not taken already and can be created"
 api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-## getCompressedBalance
+## getMultipleNewAddressProofs
 
-Returns the balance for the compressed account with the given address or hash
+Returns proofs that the new addresses are not taken already and can be created
 
 ### Body
 
@@ -20,15 +20,12 @@ Returns the balance for the compressed account with the given address or hash
 
 <ParamField body="method" type="string" required>
   The name of the method to invoke. **Possible values:**
-  `getCompressedAccountBalance`
+  `getMultipleNewAddressProofs`
 </ParamField>
 
-<ParamField body="params" type="object" required>
-  Request for compressed account data
-  
-  **Default:** `{"address":null,"hash":"11111111111111111111111111111111"}`
-  
-  **Example:** `{"address":null,"hash":"11111111111111111111111111111111"}`
+<ParamField body="params" type="string[]" required>
+  A Solana public key represented as a base58 string. **Example:**
+  `11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs`
 </ParamField>
 
 ### Response
@@ -37,9 +34,7 @@ Returns the balance for the compressed account with the given address or hash
   Success
   <Expandable title="Response">
     <ResponseField name="context" type="object" />
-    <ResponseField name="value" type="integer">
-      **Default:** `100` **Example:** `100`
-    </ResponseField>
+    <ResponseField name="value" type="object[]" />
   </Expandable>
 </ResponseField>
 
@@ -66,11 +61,10 @@ curl -X POST https://mainnet.helius-rpc.com?api-key=<api_key>/ \
   -d '{
     "id": "test-account",
     "jsonrpc": "2.0",
-    "method": "getCompressedAccountBalance",
-    "params": {
-      "address": null,
-      "hash": "11111111111111111111111111111111"
-    }
+    "method": "getMultipleNewAddressProofs",
+    "params": [
+      "11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs"
+    ]
   }'
 ```
 
@@ -79,16 +73,15 @@ POST / HTTP/1.1
 Host: mainnet.helius-rpc.com
 Content-Type: application/json
 Accept: */*
-Content-Length: 144
+Content-Length: 131
 
 {
   "id": "test-account",
   "jsonrpc": "2.0",
-  "method": "getCompressedAccountBalance",
-  "params": {
-    "address": null,
-    "hash": "11111111111111111111111111111111"
-  }
+  "method": "getMultipleNewAddressProofs",
+  "params": [
+    "11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs"
+  ]
 }
 ```
 
@@ -101,7 +94,19 @@ Content-Length: 144
   "context": {
     "slot": 100
   },
-  "value": 100
+  "value": [
+    {
+      "address": "11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs",
+      "higherRangeAddress": "11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs",
+      "lowElementLeafIndex": 1,
+      "lowerRangeAddress": "11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs",
+      "merkleTree": "11111117qkFjr4u54stuNNUR8fRF8dNhaP35yvANs",
+      "nextIndex": 1,
+      "proof": ["11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP"],
+      "root": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+      "rootSeq": 1
+    }
+  ]
 }
 ```
 

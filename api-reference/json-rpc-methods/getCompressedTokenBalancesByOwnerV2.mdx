@@ -1,111 +1,126 @@
 ---
 title: "getCompressedTokenBalancesByOwnerV2"
-description: "Get compressed token balances by owner (version 2)"
-mode: "custom"
+description: "Returns the token balances for a given owner. This is a paginated endpoint. The V2 version solves a minor naming issue."
+api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-<div className="method-page-container">
-  <div className="method-header">
-    <h1 className="method-title">getCompressedTokenBalancesByOwnerV2</h1>
-    <p className="method-description">Get compressed token balances by owner (version 2).</p>
-  </div>
+## getCompressedTokenBalancesByOwnerV2
 
-{" "}
-<div className="method-params method-section">
-  <h3>Parameters</h3>
-  <ul>
-    <li>
-      <code>owner</code> (string): The owner's public key
-    </li>
-  </ul>
-</div>
+Returns the token balances for a given owner. This is a paginated endpoint. The V2 version solves a minor naming issue.
 
-{" "}
-<div className="method-response method-section">
-  <h3>Response Fields</h3>
-  <table className="method-table">
-    <thead>
-      <tr>
-        <th>Field</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <code>tokenBalances</code>
-        </td>
-        <td>array</td>
-        <td>Array of token balance objects</td>
-      </tr>
-      <tr>
-        <td>
-          <code>mint</code>
-        </td>
-        <td>string</td>
-        <td>The mint address</td>
-      </tr>
-      <tr>
-        <td>
-          <code>balance</code>
-        </td>
-        <td>number</td>
-        <td>Token balance</td>
-      </tr>
-      <tr>
-        <td>
-          <code>decimals</code>
-        </td>
-        <td>number</td>
-        <td>Number of decimal places</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+### Body
 
-  <div className="method-examples">
-    <div className="example-request method-section">
-      <h3>Example Request</h3>
-      <div className="method-code">
-```json
+<ParamField body="id" type="string" required>
+  An ID to identify the request. **Possible values:** `test-account`
+</ParamField>
+
+<ParamField body="jsonrpc" type="string" required>
+  The version of the JSON-RPC protocol. **Possible values:** `2.0`
+</ParamField>
+
+<ParamField body="method" type="string" required>
+  The name of the method to invoke. **Possible values:**
+  `getCompressedTokenBalancesByOwnerV2`
+</ParamField>
+
+<ParamField body="params" type="object" required>
+  Request parameters
+</ParamField>
+
+### Response
+
+<ResponseField name="200" type="object">
+  Success
+  <Expandable title="Response">
+    <ResponseField name="context" type="object" />
+    <ResponseField name="value" type="object" />
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="429" type="object">
+  Exceeded rate limit.
+  <Expandable title="Response">
+    <ResponseField name="error" type="string" />
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="500" type="object">
+  The server encountered an unexpected condition that prevented it from
+  fulfilling the request.
+  <Expandable title="Response">
+    <ResponseField name="error" type="string" />
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://mainnet.helius-rpc.com?api-key=<api_key>/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "test-account",
+    "jsonrpc": "2.0",
+    "method": "getCompressedTokenBalancesByOwnerV2",
+    "params": {
+      "cursor": "3J98t1WpEZ73CNm",
+      "limit": 1,
+      "mint": "11111114DhpssPJgSi1YU7hCMfYt1BJ334YgsffXm",
+      "owner": "11111114DhpssPJgSi1YU7hCMfYt1BJ334YgsffXm"
+    }
+  }'
+```
+
+```http HTTP
+POST / HTTP/1.1
+Host: mainnet.helius-rpc.com
+Content-Type: application/json
+Accept: */*
+Content-Length: 235
+
 {
+  "id": "test-account",
   "jsonrpc": "2.0",
-  "id": 1,
   "method": "getCompressedTokenBalancesByOwnerV2",
-  "params": ["ownerPublicKey"]
+  "params": {
+    "cursor": "3J98t1WpEZ73CNm",
+    "limit": 1,
+    "mint": "11111114DhpssPJgSi1YU7hCMfYt1BJ334YgsffXm",
+    "owner": "11111114DhpssPJgSi1YU7hCMfYt1BJ334YgsffXm"
+  }
 }
 ```
-      </div>
-    </div>
 
-    <div className="example-response method-section">
-      <h3>Example Response</h3>
-      <div className="method-code">
+</RequestExample>
 
-```json
+<ResponseExample>
+
+```json 200 Success
 {
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "tokenBalances": [
+  "context": {
+    "slot": 100
+  },
+  "value": {
+    "cursor": "3J98t1WpEZ73CNm",
+    "items": [
       {
-        "mint": "mintAddress1",
-        "balance": 1000000000,
-        "decimals": 9
-      },
-      {
-        "mint": "mintAddress2",
-        "balance": 500000000,
-        "decimals": 6
+        "balance": 100,
+        "mint": "11111114DhpssPJgSi1YU7hCMfYt1BJ334YgsffXm"
       }
     ]
   }
 }
 ```
 
-      </div>
-    </div>
+```json 429 Exceeded rate limit
+{
+  "error": "text"
+}
+```
 
-  </div>
-</div>
+```json 500 Server Error
+{
+  "error": "text"
+}
+```
+
+</ResponseExample>

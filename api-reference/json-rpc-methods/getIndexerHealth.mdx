@@ -1,99 +1,64 @@
 ---
 title: "getIndexerHealth"
-description: "Get the health status of the indexer"
-mode: "custom"
+description: "Returns an error if the indexer is stale by more than a configurable number of blocks. Otherwise, it returns ok"
+api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-<div className="method-page-container">
-  <div className="method-header">
-    <h1 className="method-title">getIndexerHealth</h1>
-    <p className="method-description">Get the health status of the indexer.</p>
-  </div>
+## getIndexerHealth
 
-{" "}
-<div className="method-params method-section">
-  <h3>Parameters</h3>
-  <p>None</p>
-</div>
+Returns an error if the indexer is stale by more than a configurable number of blocks. Otherwise, it returns ok
 
-{" "}
-<div className="method-response method-section">
-  <h3>Response Fields</h3>
-  <table className="method-table">
-    <thead>
-      <tr>
-        <th>Field</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <code>status</code>
-        </td>
-        <td>string</td>
-        <td>Health status (healthy/degraded/unhealthy)</td>
-      </tr>
-      <tr>
-        <td>
-          <code>lastUpdate</code>
-        </td>
-        <td>number</td>
-        <td>Unix timestamp of last update</td>
-      </tr>
-      <tr>
-        <td>
-          <code>slot</code>
-        </td>
-        <td>number</td>
-        <td>Current indexer slot</td>
-      </tr>
-      <tr>
-        <td>
-          <code>version</code>
-        </td>
-        <td>string</td>
-        <td>Indexer version</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+### Body
 
-  <div className="method-examples">
-    <div className="example-request method-section">
-      <h3>Example Request</h3>
-      <div className="method-code">
-```json
+<ParamField body="id" type="string" required>
+  An ID to identify the request. **Possible values:** `test-account`
+</ParamField>
+
+<ParamField body="jsonrpc" type="string" required>
+  The version of the JSON-RPC protocol. **Possible values:** `2.0`
+</ParamField>
+
+<ParamField body="method" type="string" required>
+  The name of the method to invoke. **Possible values:** `getIndexerHealth`
+</ParamField>
+
+### Response
+
+<ResponseField name="200" type="string">
+  ok if healthy **Default:** `ok` **Possible values:** `ok`
+</ResponseField>
+
+<ResponseField name="429" type="object">
+  Exceeded rate limit.
+</ResponseField>
+
+<ResponseField name="500" type="object">
+  The server encountered an unexpected condition that prevented it from
+  fulfilling the request.
+</ResponseField>
+
+<RequestExample>
+
+```http HTTP
+POST / HTTP/1.1
+Host: mainnet.helius-rpc.com
+Content-Type: application/json
+Accept: */*
+Content-Length: 65
+
 {
+  "id": "test-account",
   "jsonrpc": "2.0",
-  "id": 1,
-  "method": "getIndexerHealth",
-  "params": []
-}
-```
-      </div>
-    </div>
-
-    <div className="example-response method-section">
-      <h3>Example Response</h3>
-      <div className="method-code">
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "status": "healthy",
-    "lastUpdate": 1672531200,
-    "slot": 123456789,
-    "version": "1.0.0"
-  }
+  "method": "getIndexerHealth"
 }
 ```
 
-      </div>
-    </div>
+</RequestExample>
 
-  </div>
-</div>
+<ResponseExample>
+
+```json 200 Success
+ok
+```
+
+</ResponseExample>

@@ -1,129 +1,138 @@
 ---
 title: "getTransactionWithCompressionInfo"
-description: "Get transaction details with compression-specific information"
-mode: "custom"
+description: "Returns the transaction data for the transaction with the given signature along with parsed compression info"
+api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-<div className="method-page-container">
-  <div className="method-header">
-    <h1 className="method-title">getTransactionWithCompressionInfo</h1>
-    <p className="method-description">Get transaction details with compression-specific information.</p>
-  </div>
+## getTransactionWithCompressionInfo
 
-{" "}
-<div className="method-params method-section">
-  <h3>Parameters</h3>
-  <ul>
-    <li>
-      <code>signature</code> (string): The transaction signature
-    </li>
-  </ul>
-</div>
+Returns the transaction data for the transaction with the given signature along with parsed compression info
 
-{" "}
-<div className="method-response method-section">
-  <h3>Response Fields</h3>
-  <table className="method-table">
-    <thead>
-      <tr>
-        <th>Field</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <code>transaction</code>
-        </td>
-        <td>object</td>
-        <td>Transaction object with compression info</td>
-      </tr>
-      <tr>
-        <td>
-          <code>signature</code>
-        </td>
-        <td>string</td>
-        <td>Transaction signature</td>
-      </tr>
-      <tr>
-        <td>
-          <code>slot</code>
-        </td>
-        <td>number</td>
-        <td>Slot number when transaction occurred</td>
-      </tr>
-      <tr>
-        <td>
-          <code>blockTime</code>
-        </td>
-        <td>number</td>
-        <td>Unix timestamp of the block</td>
-      </tr>
-      <tr>
-        <td>
-          <code>compressionInfo</code>
-        </td>
-        <td>object</td>
-        <td>Compression-specific information</td>
-      </tr>
-      <tr>
-        <td>
-          <code>compressedAccounts</code>
-        </td>
-        <td>array</td>
-        <td>Array of compressed account addresses</td>
-      </tr>
-      <tr>
-        <td>
-          <code>proofs</code>
-        </td>
-        <td>array</td>
-        <td>Array of compression proofs</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+### Body
 
-  <div className="method-examples">
-    <div className="example-request method-section">
-      <h3>Example Request</h3>
-      <div className="method-code">
-```json
+<ParamField body="id" type="string" required>
+  An ID to identify the request. **Possible values:** `test-account`
+</ParamField>
+
+<ParamField body="jsonrpc" type="string" required>
+  The version of the JSON-RPC protocol. **Possible values:** `2.0`
+</ParamField>
+
+<ParamField body="method" type="string" required>
+  The name of the method to invoke. **Possible values:**
+  `getTransactionWithCompressionInfo`
+</ParamField>
+
+<ParamField body="params" type="object" required>
+  Request parameters
+</ParamField>
+
+### Response
+
+<ResponseField name="200" type="object">
+  A Solana transaction with additional compression information
+  <Expandable title="Response">
+    <ResponseField name="compression_info" type="object">
+      Compression information for the transaction
+    </ResponseField>
+    <ResponseField name="transaction" type="object">
+      An encoded confirmed transaction with status meta
+    </ResponseField>
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="429" type="object">
+  Exceeded rate limit.
+</ResponseField>
+
+<ResponseField name="500" type="object">
+  The server encountered an unexpected condition that prevented it from
+  fulfilling the request.
+</ResponseField>
+
+<RequestExample>
+
+```http HTTP
+POST / HTTP/1.1
+Host: mainnet.helius-rpc.com
+Content-Type: application/json
+Accept: */*
+Content-Length: 152
+
 {
+  "id": "test-account",
   "jsonrpc": "2.0",
-  "id": 1,
   "method": "getTransactionWithCompressionInfo",
-  "params": ["transactionSignature"]
-}
-```
-      </div>
-    </div>
-
-    <div className="example-response method-section">
-      <h3>Example Response</h3>
-      <div className="method-code">
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "transaction": {
-      "signature": "transactionSignature",
-      "slot": 123456789,
-      "blockTime": 1672531200,
-      "compressionInfo": {
-        "compressedAccounts": ["account1", "account2"],
-        "proofs": ["proof1", "proof2"]
-      }
-    }
+  "params": {
+    "signature": "5J8H5sTvEhnGcB4R8K1n7mfoiWUD9RzPVGES7e3WxC7c"
   }
 }
 ```
 
-      </div>
-    </div>
+</RequestExample>
 
-  </div>
-</div>
+<ResponseExample>
+
+```json 200 Success
+{
+  "compression_info": {
+    "closedAccounts": [
+      {
+        "account": {
+          "address": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "data": {
+            "data": "SGVsbG8sIFdvcmxkIQ==",
+            "dataHash": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+            "discriminator": 100
+          },
+          "hash": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+          "lamports": 100,
+          "leafIndex": 100,
+          "owner": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "seq": 100,
+          "slotCreated": 100,
+          "tree": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq"
+        },
+        "optionalTokenData": {
+          "amount": 100,
+          "delegate": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "mint": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "owner": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "state": "initialized",
+          "tlv": "SGVsbG8sIFdvcmxkIQ=="
+        }
+      }
+    ],
+    "openedAccounts": [
+      {
+        "account": {
+          "address": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "data": {
+            "data": "SGVsbG8sIFdvcmxkIQ==",
+            "dataHash": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+            "discriminator": 100
+          },
+          "hash": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+          "lamports": 100,
+          "leafIndex": 100,
+          "owner": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "seq": 100,
+          "slotCreated": 100,
+          "tree": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq"
+        },
+        "optionalTokenData": {
+          "amount": 100,
+          "delegate": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "mint": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "owner": "11111116djSnXB2wXVGT4xDLsfTnkp1p4cCxHAfRq",
+          "state": "initialized",
+          "tlv": "SGVsbG8sIFdvcmxkIQ=="
+        }
+      }
+    ]
+  },
+  "transaction": {}
+}
+```
+
+</ResponseExample>

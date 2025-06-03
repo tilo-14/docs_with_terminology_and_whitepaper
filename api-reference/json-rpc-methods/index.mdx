@@ -1,71 +1,293 @@
 ---
-title: "JSON RPC Methods Overview"
+title: "Overview"
 description: "Complete JSON RPC API reference for ZK Compression"
+mode: "custom"
 ---
+
+<div className="overview-page-container">
 
 # JSON RPC Methods
 
 Helius Labs maintains the canonical RPC API and indexer implementation. The following pages outline all ZK Compression methods extending Solana's default JSON RPC API.
 
-<Info>
-  All methods follow the standard JSON RPC 2.0 protocol. Base URL varies by
-  network: - **Devnet**: `https://api.devnet.solana.com` - **Mainnet**:
-  `https://api.mainnet-beta.solana.com`
-</Info>
+<div className="overview-info-section">
+  <Info>
+    All methods follow the standard JSON RPC 2.0 protocol. Base URL varies by
+    network: - **Devnet**: `https://api.devnet.solana.com` - **Mainnet**:
+    `https://api.mainnet-beta.solana.com`
+  </Info>
+</div>
 
 ## Method Categories
 
-### 👥 Account Methods
+<div className="methods-grid">
 
-Methods for retrieving compressed account information:
+<div className="method-category">
+  <div className="category-header">
+    <h3>👥 Account Methods</h3>
+    <p>Methods for retrieving compressed account information</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedAccount"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedAccount</span>
+      <span className="method-desc">
+        Get details of a compressed account by its hash
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedAccountsByOwner"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedAccountsByOwner</span>
+      <span className="method-desc">
+        Get all compressed accounts owned by a specific address
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getMultipleCompressedAccounts"
+      className="method-link"
+    >
+      <span className="method-name">getMultipleCompressedAccounts</span>
+      <span className="method-desc">
+        Get multiple compressed accounts in a single request
+      </span>
+    </a>
+  </div>
+</div>
 
-- [getCompressedAccount](/api-reference/json-rpc-methods/getCompressedAccount)
-- [getCompressedAccountsByOwner](/api-reference/json-rpc-methods/getCompressedAccountsByOwner)
-- [getMultipleCompressedAccounts](/api-reference/json-rpc-methods/getMultipleCompressedAccounts)
+<div className="method-category">
+  <div className="category-header">
+    <h3>💰 Balance Methods</h3>
+    <p>Methods for checking compressed SOL and token balances</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedBalance"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedBalance</span>
+      <span className="method-desc">
+        Get the compressed SOL balance for a specific owner
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedBalanceByOwner"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedBalanceByOwner</span>
+      <span className="method-desc">
+        Get compressed balances grouped by owner
+      </span>
+    </a>
+  </div>
+</div>
 
-### 💰 Balance Methods
+<div className="method-category">
+  <div className="category-header">
+    <h3>🪙 Token Account Methods</h3>
+    <p>Methods for compressed token accounts</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedTokenAccountBalance"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedTokenAccountBalance</span>
+      <span className="method-desc">
+        Get the compressed token balance for a specific token account
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedMintTokenHolders"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedMintTokenHolders</span>
+      <span className="method-desc">
+        Get all token holders for a specific compressed mint
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedTokenBalancesByOwnerV2"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedTokenBalancesByOwnerV2</span>
+      <span className="method-desc">
+        Get compressed token balances by owner (version 2)
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedTokenAccountsByOwner"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedTokenAccountsByOwner</span>
+      <span className="method-desc">
+        Get compressed token accounts by owner
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedTokenAccountsByDelegate</span>
+      <span className="method-desc">
+        Get compressed token accounts by delegate
+      </span>
+    </a>
+  </div>
+</div>
 
-Methods for checking compressed SOL and token balances:
+<div className="method-category">
+  <div className="category-header">
+    <h3>🛡️ Proof Methods</h3>
+    <p>Methods for Merkle proofs and validity checks</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getCompressedAccountProof"
+      className="method-link"
+    >
+      <span className="method-name">getCompressedAccountProof</span>
+      <span className="method-desc">
+        Get a Merkle proof for a compressed account
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getMultipleCompressedAccountProofs"
+      className="method-link"
+    >
+      <span className="method-name">getMultipleCompressedAccountProofs</span>
+      <span className="method-desc">
+        Get Merkle proofs for multiple compressed accounts
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getMultipleNewAddressProofs"
+      className="method-link"
+    >
+      <span className="method-name">getMultipleNewAddressProofs</span>
+      <span className="method-desc">Get proofs for multiple new addresses</span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getValidityProof"
+      className="method-link"
+    >
+      <span className="method-name">getValidityProof</span>
+      <span className="method-desc">
+        Get a validity proof for compressed state
+      </span>
+    </a>
+  </div>
+</div>
 
-- [getCompressedBalance](/api-reference/json-rpc-methods/getCompressedBalance)
-- [getCompressedBalanceByOwner](/api-reference/json-rpc-methods/getCompressedBalanceByOwner)
+<div className="method-category">
+  <div className="category-header">
+    <h3>✍️ Signature Methods</h3>
+    <p>Methods for compression signatures</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getCompressionSignaturesForAccount"
+      className="method-link"
+    >
+      <span className="method-name">getCompressionSignaturesForAccount</span>
+      <span className="method-desc">
+        Get compression signatures for a specific account
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressionSignaturesForAddress"
+      className="method-link"
+    >
+      <span className="method-name">getCompressionSignaturesForAddress</span>
+      <span className="method-desc">
+        Get compression signatures for a specific address
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressionSignaturesForOwner"
+      className="method-link"
+    >
+      <span className="method-name">getCompressionSignaturesForOwner</span>
+      <span className="method-desc">
+        Get compression signatures for a specific owner
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getCompressionSignaturesForTokenOwner"
+      className="method-link"
+    >
+      <span className="method-name">getCompressionSignaturesForTokenOwner</span>
+      <span className="method-desc">
+        Get compression signatures for a token owner
+      </span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getLatestCompressionSignatures"
+      className="method-link"
+    >
+      <span className="method-name">getLatestCompressionSignatures</span>
+      <span className="method-desc">Get the latest compression signatures</span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getLatestNonVotingSignatures"
+      className="method-link"
+    >
+      <span className="method-name">getLatestNonVotingSignatures</span>
+      <span className="method-desc">Get the latest non-voting signatures</span>
+    </a>
+  </div>
+</div>
 
-### 🪙 Token Account Methods
+<div className="method-category method-transaction">
+  <div className="category-header">
+    <h3>🔄 Transaction Methods</h3>
+    <p>Methods for compression transaction information</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getTransactionWithCompressionInfo"
+      className="method-link"
+    >
+      <span className="method-name">getTransactionWithCompressionInfo</span>
+      <span className="method-desc">
+        Get transaction details with compression-specific information
+      </span>
+    </a>
+  </div>
+</div>
 
-Methods for compressed token accounts:
+<div className="method-category method-indexer">
+  <div className="category-header">
+    <h3>🖥️ Indexer Methods</h3>
+    <p>Methods for indexer status and health</p>
+  </div>
+  <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getIndexerSlot"
+      className="method-link"
+    >
+      <span className="method-name">getIndexerSlot</span>
+      <span className="method-desc">Get the current indexer slot</span>
+    </a>
+    <a
+      href="/api-reference/json-rpc-methods/getIndexerHealth"
+      className="method-link"
+    >
+      <span className="method-name">getIndexerHealth</span>
+      <span className="method-desc">Get the health status of the indexer</span>
+    </a>
+  </div>
+</div>
 
-- [getCompressedTokenAccountBalance](/api-reference/json-rpc-methods/getCompressedTokenAccountBalance)
-- [getCompressedMintTokenHolders](/api-reference/json-rpc-methods/getCompressedMintTokenHolders)
-- [getCompressedTokenBalancesByOwnerV2](/api-reference/json-rpc-methods/getCompressedTokenBalancesByOwnerV2)
-- [getCompressedTokenAccountsByOwner](/api-reference/json-rpc-methods/getCompressedTokenAccountsByOwner)
-- [getCompressedTokenAccountsByDelegate](/api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate)
+</div>
 
-### 🔄 Transaction Methods
+<div className="bottom-sections">
 
-Methods for compression transaction information:
-
-- [getTransactionWithCompressionInfo](/api-reference/json-rpc-methods/getTransactionWithCompressionInfo)
-
-### 🛡️ Proof Methods
-
-Methods for Merkle proofs and validity checks:
-
-- [getCompressedAccountProof](/api-reference/json-rpc-methods/getCompressedAccountProof)
-
-### ✍️ Signature Methods
-
-Methods for compression signatures:
-
-- [getLatestCompressionSignatures](/api-reference/json-rpc-methods/getLatestCompressionSignatures)
-
-### 🖥️ Indexer Methods
-
-Methods for indexer status and health:
-
-- [getIndexerSlot](/api-reference/json-rpc-methods/getIndexerSlot)
-- [getIndexerHealth](/api-reference/json-rpc-methods/getIndexerHealth)
-
-## Error Codes
+<div className="error-codes-section">
+<h2>Error Codes</h2>
 
 | Code   | Message              | Description                                  |
 | ------ | -------------------- | -------------------------------------------- |
@@ -76,7 +298,10 @@ Methods for indexer status and health:
 | -32000 | Account not found    | The compressed account was not found         |
 | -32001 | Invalid account hash | The provided account hash is invalid         |
 
-## Best Practices
+</div>
+
+<div className="best-practices-section">
+<h2>Best Practices</h2>
 
 <CardGroup cols={2}>
   <Card title="Commitment Levels" icon="shield-check">
@@ -93,4 +318,9 @@ Methods for indexer status and health:
   <Card title="Caching" icon="database">
     Cache frequently accessed data to reduce API calls and improve performance
   </Card>
-</CardGroup>{" "}
+</CardGroup>
+</div>
+
+</div>
+
+</div>

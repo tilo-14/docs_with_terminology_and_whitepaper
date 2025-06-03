@@ -35,6 +35,13 @@
               "api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate",
               "api-reference/json-rpc-methods/getTransactionWithCompressionInfo",
               "api-reference/json-rpc-methods/getCompressedAccountProof",
+              "api-reference/json-rpc-methods/getMultipleCompressedAccountProofs",
+              "api-reference/json-rpc-methods/getMultipleNewAddressProofs",
+              "api-reference/json-rpc-methods/getValidityProof",
+              "api-reference/json-rpc-methods/getCompressionSignaturesForAccount",
+              "api-reference/json-rpc-methods/getCompressionSignaturesForAddress",
+              "api-reference/json-rpc-methods/getCompressionSignaturesForOwner",
+              "api-reference/json-rpc-methods/getCompressionSignaturesForTokenOwner",
               "api-reference/json-rpc-methods/getLatestCompressionSignatures",
               "api-reference/json-rpc-methods/getIndexerSlot",
               "api-reference/json-rpc-methods/getIndexerHealth"

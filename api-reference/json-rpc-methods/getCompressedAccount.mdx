@@ -1,138 +1,131 @@
 ---
 title: "getCompressedAccount"
-description: "Get details of a compressed account by its hash"
-mode: "custom"
+description: "Returns the compressed account with the given address or hash"
+api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-<div className="method-page-container">
-  <div className="method-header">
-    <h1 className="method-title">getCompressedAccount</h1>
-    <p className="method-description">Get details of a compressed account by its hash.</p>
-  </div>
+## getCompressedAccount
 
-{" "}
-<div className="method-params method-section">
-  <h3>Parameters</h3>
-  <ul>
-    <li>
-      <code>accountHash</code> (string): The hash of the compressed account
-    </li>
-  </ul>
-</div>
+Returns the compressed account with the given address or hash
 
-{" "}
-<div className="method-response method-section">
-  <h3>Response Fields</h3>
-  <table className="method-table">
-    <thead>
-      <tr>
-        <th>Field</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <code>hash</code>
-        </td>
-        <td>string</td>
-        <td>The hash of the compressed account</td>
-      </tr>
-      <tr>
-        <td>
-          <code>data</code>
-        </td>
-        <td>string</td>
-        <td>Base64 encoded account data</td>
-      </tr>
-      <tr>
-        <td>
-          <code>owner</code>
-        </td>
-        <td>string</td>
-        <td>The owner's public key</td>
-      </tr>
-      <tr>
-        <td>
-          <code>lamports</code>
-        </td>
-        <td>number</td>
-        <td>Account balance in lamports</td>
-      </tr>
-      <tr>
-        <td>
-          <code>executable</code>
-        </td>
-        <td>boolean</td>
-        <td>Whether the account is executable</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+### Body
 
-  <div className="method-examples">
-    <div className="example-request method-section">
-      <h3>Example Request</h3>
-      <div className="method-code">
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "getCompressedAccount",
-  "params": ["accountHashExample"]
-}
-```
-      </div>
-    </div>
+<ParamField body="id" type="string" required>
+  An ID to identify the request. **Possible values:** `test-account`
+</ParamField>
 
-    <div className="example-response method-section">
-      <h3>Example Response</h3>
-      <div className="method-code">
+<ParamField body="jsonrpc" type="string" required>
+  The version of the JSON-RPC protocol. **Possible values:** `2.0`
+</ParamField>
 
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "account": {
-      "hash": "accountHashExample",
-      "data": "base64EncodedData",
-      "owner": "ownerPublicKey",
-      "lamports": 1000000,
-      "executable": false
+<ParamField body="method" type="string" required>
+  The name of the method to invoke. **Possible values:** `getCompressedAccount`
+</ParamField>
+
+<ParamField body="params" type="object" required>
+  Request for compressed account data
+  
+  **Default:** `{"address":null,"hash":"11111111111111111111111111111111"}`
+  
+  **Example:** `{"address":null,"hash":"11111111111111111111111111111111"}`
+</ParamField>
+
+### Response
+
+<ResponseField name="200" type="object">
+  Success
+  <Expandable title="Response">
+    <ResponseField name="context" type="object" />
+    <ResponseField name="value" type="object" />
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="429" type="object">
+  Exceeded rate limit.
+  <Expandable title="Response">
+    <ResponseField name="error" type="string" />
+  </Expandable>
+</ResponseField>
+
+<ResponseField name="500" type="object">
+  The server encountered an unexpected condition that prevented it from
+  fulfilling the request.
+  <Expandable title="Response">
+    <ResponseField name="error" type="string" />
+  </Expandable>
+</ResponseField>
+
+<RequestExample>
+
+```bash cURL
+curl -X POST https://mainnet.helius-rpc.com?api-key=<api_key>/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "test-account",
+    "jsonrpc": "2.0",
+    "method": "getCompressedAccount",
+    "params": {
+      "address": null,
+      "hash": "11111111111111111111111111111111"
     }
+  }'
+```
+
+```http HTTP
+POST / HTTP/1.1
+Host: mainnet.helius-rpc.com
+Content-Type: application/json
+Accept: */*
+Content-Length: 137
+
+{
+  "id": "test-account",
+  "jsonrpc": "2.0",
+  "method": "getCompressedAccount",
+  "params": {
+    "address": null,
+    "hash": "11111111111111111111111111111111"
   }
 }
 ```
 
-      </div>
-    </div>
+</RequestExample>
 
-  </div>
+<ResponseExample>
 
-  <div className="method-errors method-section">
-    <h3>Error Codes</h3>
-    <table className="method-table">
-      <thead>
-        <tr>
-          <th>Code</th>
-          <th>Message</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>-32000</td>
-          <td>Account not found</td>
-          <td>The compressed account was not found</td>
-        </tr>
-        <tr>
-          <td>-32001</td>
-          <td>Invalid account hash</td>
-          <td>The provided account hash is invalid</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+```json 200 Success
+{
+  "context": {
+    "slot": 100
+  },
+  "value": {
+    "address": "11111112D1oxKts8YPdTJRG5FzxTNpMtWmq8hkVx3",
+    "data": {
+      "data": "SGVsbG8sIFdvcmxkIQ==",
+      "dataHash": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+      "discriminator": 100
+    },
+    "hash": "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP",
+    "lamports": 100,
+    "leafIndex": 100,
+    "owner": "11111112D1oxKts8YPdTJRG5FzxTNpMtWmq8hkVx3",
+    "seq": 100,
+    "slotCreated": 100,
+    "tree": "11111112D1oxKts8YPdTJRG5FzxTNpMtWmq8hkVx3"
+  }
+}
+```
+
+```json 429 Exceeded rate limit
+{
+  "error": "text"
+}
+```
+
+```json 500 Server Error
+{
+  "error": "text"
+}
+```
+
+</ResponseExample>

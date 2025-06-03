@@ -3,14 +3,6 @@ title: "Quickstart"
 description: "Get your development environment ready for ZK Compression and run your first airdrop"
 ---
 
-ZK Compression on Solana consists of two main parts: **client development** and **on-chain program development**. This guide will get you set up for client development and walk you through creating your first compressed token airdrop.
-
-The ZK Compression RPC API extends Solana's JSON RPC API with additional endpoints for interacting with ZK compressed accounts.
-
----
-
-## Development Setup
-
 <Steps>
   <Step title="Install Dependencies">
     Install the ZK Compression CLI and required SDKs:
@@ -67,36 +59,13 @@ The ZK Compression RPC API extends Solana's JSON RPC API with additional endpoin
     ```
 
   </Step>
-
-  <Step title="Test Local Development (Optional)">
-    For local development, you can run a local test validator:
-
-    ```bash
-    # Start local test validator with ZK Compression
-    light test-validator
-    ```
-
-    Then connect to it:
-
-    ```typescript
-    // For localnet
-    const connection = createRpc();
-
-    async function testConnection() {
-      const slot = await connection.getSlot();
-      const health = await connection.getIndexerHealth(slot);
-      console.log("Slot:", slot, "Health:", health);
-    }
-    ```
-
-  </Step>
 </Steps>
 
 ---
 
 ## Your First Compressed Token Airdrop
 
-Let's create and distribute compressed SPL tokens to multiple wallets. Compressed tokens are up to **5000x cheaper** than regular SPL tokens!
+Let's create and distribute compressed SPL tokens to multiple wallets.
 
 <Steps>
   <Step title="Create and Fund Your Mint">
@@ -269,19 +238,13 @@ Let's create and distribute compressed SPL tokens to multiple wallets. Compresse
   </Step>
 </Steps>
 
-## What's Next?
-
-🎉 Congratulations! You've successfully:
+**You've successfully:**
 
 - Set up your ZK Compression development environment
 - Created a compressed SPL token
 - Executed a cost-efficient airdrop to multiple wallets
 
-**Key Benefits You Just Experienced:**
-
-- **5000x cheaper** than regular SPL tokens
-- **Batch operations** to multiple recipients
-- **Wallet compatibility** with Phantom, Backpack, and more
+## What's Next?
 
 <CardGroup cols={2}>
   <Card title="Build Programs" href="/developers/programs" icon="code">

@@ -1,75 +1,38 @@
 ---
 title: "getIndexerSlot"
-description: "Get the current indexer slot"
-mode: "custom"
+description: "Returns the slot of the last block indexed by the indexer"
+api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-<div className="method-page-container">
-  <div className="method-header">
-    <h1 className="method-title">getIndexerSlot</h1>
-    <p className="method-description">Get the current indexer slot.</p>
-  </div>
+## getIndexerSlot
 
-{" "}
-<div className="method-params method-section">
-  <h3>Parameters</h3>
-  <p>None</p>
-</div>
+Returns the slot of the last block indexed by the indexer
 
-{" "}
-<div className="method-response method-section">
-  <h3>Response Fields</h3>
-  <table className="method-table">
-    <thead>
-      <tr>
-        <th>Field</th>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <code>slot</code>
-        </td>
-        <td>number</td>
-        <td>The current indexer slot number</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+### Body
 
-  <div className="method-examples">
-    <div className="example-request method-section">
-      <h3>Example Request</h3>
-      <div className="method-code">
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "getIndexerSlot",
-  "params": []
-}
-```
-      </div>
-    </div>
+<ParamField body="id" type="string" required>
+  An ID to identify the request. **Possible values:** `test-account`
+</ParamField>
 
-    <div className="example-response method-section">
-      <h3>Example Response</h3>
-      <div className="method-code">
+<ParamField body="jsonrpc" type="string" required>
+  The version of the JSON-RPC protocol. **Possible values:** `2.0`
+</ParamField>
 
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "result": {
-    "slot": 123456789
-  }
-}
-```
+<ParamField body="method" type="string" required>
+  The name of the method to invoke. **Possible values:** `getIndexerSlot`
+</ParamField>
 
-      </div>
-    </div>
+### Response
 
-  </div>
-</div>
+<ResponseField name="200" type="integer">
+  Success **Default:** `100` **Example:** `100`
+</ResponseField>
+
+<ResponseField name="429" type="object">
+  Exceeded rate limit.
+</ResponseField>
+
+<ResponseField name="500" type="object">
+  The server encountered an unexpected condition that prevented it from
+  fulfilling the request.
+</ResponseField>

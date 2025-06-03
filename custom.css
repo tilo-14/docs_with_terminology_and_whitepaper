@@ -1,5 +1,373 @@
 /* Custom CSS for JSON RPC Method Pages - Horizontal Grid Layout */
 
+/* JSON RPC Methods Overview Page - Grid Layout */
+.overview-page-container {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 2rem !important;
+  box-sizing: border-box;
+}
+
+/* Override any default Mintlify container constraints */
+.overview-page-container * {
+  box-sizing: border-box;
+}
+
+.overview-info-section {
+  margin-bottom: 2rem;
+  width: 100%;
+}
+
+.methods-grid {
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  column-gap: 1.5rem !important;
+  margin-bottom: 3rem !important;
+  width: 100% !important;
+  position: relative;
+}
+
+.method-category {
+  background: var(--background-secondary, #f8f9fa);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color, #e1e5e9);
+  transition: all 0.2s ease;
+  width: 100%;
+  height: fit-content;
+  align-self: start !important;
+}
+
+.method-category:hover {
+  border-color: var(--primary, #0066ff);
+  box-shadow: 0 4px 12px rgba(0, 102, 255, 0.1);
+}
+
+/* Individual box positioning with custom controls */
+.method-category:nth-child(1) {
+  grid-column: 1;
+  grid-row: 1;
+  margin-bottom: 0;
+}
+
+.method-category:nth-child(2) {
+  grid-column: 2;
+  grid-row: 1;
+  margin-bottom: 0;
+}
+
+.method-category:nth-child(3) {
+  grid-column: 3;
+  grid-row: 1;
+  margin-bottom: 0;
+}
+
+.method-category:nth-child(4) {
+  grid-column: 1;
+  grid-row: 2;
+  margin-top: -10.25rem; /* Proof Methods: moved up 20px more */
+}
+
+.method-category:nth-child(5) {
+  grid-column: 2;
+  grid-row: 2;
+  margin-top: -13.9rem; /* Signature Methods: moved up 25px more */
+}
+
+.method-category.method-transaction {
+  grid-column: 3;
+  grid-row: 2;
+  margin-top: 1.5rem; /* Transaction Methods: moved down 10px */
+}
+
+.method-category.method-indexer {
+  grid-column: 3;
+  grid-row: 3;
+  margin-top: -8.2rem; /* Indexer Methods: moved up 50px more */
+}
+
+.category-header {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--primary, #0066ff);
+}
+
+.category-header h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.category-header p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.method-links {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.method-link {
+  display: block;
+  padding: 0.75rem;
+  background: var(--background-primary, #ffffff);
+  border: 1px solid var(--border-color, #e1e5e9);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.method-link:hover {
+  border-color: var(--primary, #0066ff);
+  background: var(--background-hover, #f0f7ff);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.15);
+}
+
+.method-name {
+  display: block;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--primary, #0066ff);
+  margin-bottom: 0.25rem;
+}
+
+.method-desc {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.bottom-sections {
+  display: grid !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 3rem !important;
+  margin-top: 3rem !important;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color, #e1e5e9);
+  width: 100% !important;
+}
+
+.error-codes-section,
+.best-practices-section {
+  background: var(--background-secondary, #f8f9fa);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid var(--border-color, #e1e5e9);
+}
+
+.error-codes-section h2,
+.best-practices-section h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--primary, #0066ff);
+  padding-bottom: 0.5rem;
+}
+
+/* Force full-width layout by overriding any parent constraints */
+body:has(.overview-page-container) {
+  overflow-x: auto;
+}
+
+/* Target the main content area specifically */
+[data-theme] .overview-page-container,
+.mintlify .overview-page-container,
+main .overview-page-container {
+  width: 100vw !important;
+  max-width: 100vw !important;
+  margin-left: calc(-50vw + 50%) !important;
+  padding-left: max(2rem, calc((100vw - 1400px) / 2)) !important;
+  padding-right: max(2rem, calc((100vw - 1400px) / 2)) !important;
+}
+
+/* Overview page responsive design */
+@media (max-width: 1200px) {
+  .methods-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    column-gap: 1.25rem !important;
+  }
+
+  .method-category:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .method-category:nth-child(2) {
+    grid-column: 2;
+    grid-row: 1;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .method-category:nth-child(3) {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: -1.5rem;
+    margin-bottom: 0;
+  }
+  .method-category:nth-child(4) {
+    grid-column: 2;
+    grid-row: 2;
+    margin-top: -1.5rem;
+    margin-bottom: 0;
+  }
+  .method-category:nth-child(5) {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: -1.5rem;
+    margin-bottom: 0;
+  }
+  .method-category.method-transaction {
+    grid-column: 2;
+    grid-row: 3;
+    margin-top: -1.5rem;
+    margin-bottom: 0;
+  }
+  .method-category.method-indexer {
+    grid-column: 2;
+    grid-row: 4;
+    margin-top: -1rem;
+    margin-bottom: 0;
+  }
+
+  .overview-page-container {
+    padding: 1.5rem !important;
+  }
+}
+
+@media (max-width: 1024px) {
+  .methods-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    column-gap: 1.25rem !important;
+  }
+
+  .bottom-sections {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .overview-page-container {
+    padding: 1rem !important;
+    margin-left: 0 !important;
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .overview-page-container {
+    padding: 0.5rem !important;
+    margin-left: 0 !important;
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+  }
+
+  .methods-grid {
+    grid-template-columns: 1fr !important;
+    column-gap: 0 !important;
+  }
+
+  .method-category:nth-child(1) {
+    grid-column: 1;
+    grid-row: 1;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  .method-category:nth-child(2) {
+    grid-column: 1;
+    grid-row: 2;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  .method-category:nth-child(3) {
+    grid-column: 1;
+    grid-row: 3;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  .method-category:nth-child(4) {
+    grid-column: 1;
+    grid-row: 4;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  .method-category:nth-child(5) {
+    grid-column: 1;
+    grid-row: 5;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  .method-category.method-transaction {
+    grid-column: 1;
+    grid-row: 6;
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
+  .method-category.method-indexer {
+    grid-column: 1;
+    grid-row: 7;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .method-category {
+    padding: 1rem;
+  }
+
+  .method-link {
+    padding: 0.5rem;
+  }
+
+  .method-name {
+    font-size: 0.9rem;
+  }
+
+  .method-desc {
+    font-size: 0.8rem;
+  }
+
+  .bottom-sections {
+    gap: 1.5rem !important;
+    margin-top: 2rem !important;
+  }
+
+  .error-codes-section,
+  .best-practices-section {
+    padding: 1rem;
+  }
+}
+
+/* Dark mode support for overview page */
+@media (prefers-color-scheme: dark) {
+  .method-category {
+    background: var(--background-secondary, #1a1a1a);
+    border-color: var(--border-color, #333);
+  }
+
+  .method-link {
+    background: var(--background-primary, #2a2a2a);
+    border-color: var(--border-color, #333);
+  }
+
+  .method-link:hover {
+    background: var(--background-hover, #3a3a3a);
+  }
+
+  .error-codes-section,
+  .best-practices-section {
+    background: var(--background-secondary, #1a1a1a);
+    border-color: var(--border-color, #333);
+  }
+}
+
 /* Main container for method pages */
 .method-page-container {
   display: grid;
@@ -173,4 +541,4 @@
   .method-table th {
     background-color: var(--background-tertiary, #2a2a2a);
   }
-} 
+}

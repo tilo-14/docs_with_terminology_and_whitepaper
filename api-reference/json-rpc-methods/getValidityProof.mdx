@@ -1,12 +1,22 @@
 ---
-title: "getCompressedBalance"
-description: "Returns the balance for the compressed account with the given address or hash"
+title: "getValidityProof"
+description: "Returns a single ZK Proof used by the compression program to verify that the given accounts are valid and that the new addresses can be created"
 api: "POST https://mainnet.helius-rpc.com?api-key=<api_key>/"
 ---
 
-## getCompressedBalance
+## getValidityProof
 
-Returns the balance for the compressed account with the given address or hash
+Returns a single ZK Proof used by the compression program to verify that the given accounts are valid and that the new addresses can be created
+
+Proof limits per request are:
+
+- **hashes**: 1, 2, 3, 4, or 8
+- **newAddressesWithTrees**: 1, 2
+
+<Info>
+  The `newAddresses` param field is supported but deprecated. Please use
+  `newAddressesWithTrees` instead.
+</Info>
 
 ### Body
 
@@ -19,16 +29,11 @@ Returns the balance for the compressed account with the given address or hash
 </ParamField>
 
 <ParamField body="method" type="string" required>
-  The name of the method to invoke. **Possible values:**
-  `getCompressedAccountBalance`
+  The name of the method to invoke. **Possible values:** `getValidityProof`
 </ParamField>
 
 <ParamField body="params" type="object" required>
-  Request for compressed account data
-  
-  **Default:** `{"address":null,"hash":"11111111111111111111111111111111"}`
-  
-  **Example:** `{"address":null,"hash":"11111111111111111111111111111111"}`
+  Request parameters for validity proof
 </ParamField>
 
 ### Response
@@ -37,9 +42,7 @@ Returns the balance for the compressed account with the given address or hash
   Success
   <Expandable title="Response">
     <ResponseField name="context" type="object" />
-    <ResponseField name="value" type="integer">
-      **Default:** `100` **Example:** `100`
-    </ResponseField>
+    <ResponseField name="value" type="object" />
   </Expandable>
 </ResponseField>
 
@@ -66,10 +69,17 @@ curl -X POST https://mainnet.helius-rpc.com?api-key=<api_key>/ \
   -d '{
     "id": "test-account",
     "jsonrpc": "2.0",
-    "method": "getCompressedAccountBalance",
+    "method": "getValidityProof",
     "params": {
-      "address": null,
-      "hash": "11111111111111111111111111111111"
+      "hashes": [
+        "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP"
+      ],
+      "newAddressesWithTrees": [
+        {
+          "address": "11111118eRTi4fUVRoeYEeeTyL4DPAwxatvWT5q1Z",
+          "tree": "11111118eRTi4fUVRoeYEeeTyL4DPAwxatvWT5q1Z"
+        }
+      ]
     }
   }'
 ```
@@ -79,15 +89,22 @@ POST / HTTP/1.1
 Host: mainnet.helius-rpc.com
 Content-Type: application/json
 Accept: */*
-Content-Length: 144
+Content-Length: 264
 
 {
   "id": "test-account",
   "jsonrpc": "2.0",
-  "method": "getCompressedAccountBalance",
+  "method": "getValidityProof",
   "params": {
-    "address": null,
-    "hash": "11111111111111111111111111111111"
+    "hashes": [
+      "11111112cMQwSC9qirWGjZM6gLGwW69X22mqwLLGP"
+    ],
+    "newAddressesWithTrees": [
+      {
+        "address": "11111118eRTi4fUVRoeYEeeTyL4DPAwxatvWT5q1Z",
+        "tree": "11111118eRTi4fUVRoeYEeeTyL4DPAwxatvWT5q1Z"
+      }
+    ]
   }
 }
 ```
@@ -101,7 +118,18 @@ Content-Length: 144
   "context": {
     "slot": 100
   },
-  "value": 100
+  "value": {
+    "compressedProof": {
+      "a": "binary",
+      "b": "binary",
+      "c": "binary"
+    },
+    "leafIndices": [1],
+    "leaves": ["text"],
+    "merkleTrees": ["text"],
+    "rootIndices": [1],
+    "roots": ["text"]
+  }
 }
 ```
 
