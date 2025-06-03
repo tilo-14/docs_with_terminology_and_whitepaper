@@ -28,6 +28,13 @@ title: "FAQ"
 
 {" "}
 
+<Accordion title="Is this an L2?">
+  **No.** Everything runs on Solana L1. zkCompression simply lets you treat
+  Solana as a state root layer while keeping the actual data off-chain.
+</Accordion>
+
+{" "}
+
 <Accordion title="What can I compress?">
   - **Token Accounts**: SPL-compatible token accounts via the compressed-token
   package - **Custom Account Types**: Any custom account type with deterministic
@@ -58,13 +65,6 @@ title: "FAQ"
 <Accordion title="Can I still use regular Solana instructions?">
   **Yes.** Compressed accounts are compatible with normal Solana instructions.
   You can mix compressed and uncompressed accounts in the same transaction.
-</Accordion>
-
-{" "}
-
-<Accordion title="Is this a separate chain or L2?">
-  **No.** Everything runs on Solana L1. zkCompression simply lets you treat
-  Solana as a state root layer while keeping the actual data off-chain.
 </Accordion>
 
 {" "}

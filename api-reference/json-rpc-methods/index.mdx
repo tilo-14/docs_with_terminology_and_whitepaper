@@ -8,8 +8,6 @@ mode: "custom"
 
 # JSON RPC Methods
 
-Helius Labs maintains the canonical RPC API and indexer implementation. The following pages outline all ZK Compression methods extending Solana's default JSON RPC API.
-
 <div className="overview-info-section">
   <Info>
     All methods follow the standard JSON RPC 2.0 protocol. Base URL varies by
@@ -18,14 +16,14 @@ Helius Labs maintains the canonical RPC API and indexer implementation. The foll
   </Info>
 </div>
 
-## Method Categories
-
 <div className="methods-grid">
 
 <div className="method-category">
-  <div className="category-header">
-    <h3>👥 Account Methods</h3>
-    <p>Methods for retrieving compressed account information</p>
+  <div className="category-header" style={{ marginBottom: "0.75rem" }}>
+    <h3 style={{ marginBottom: "0" }}>
+      <Icon icon="user" size={20} style={{ marginRight: "8px" }} /> Account
+      Methods
+    </h3>
   </div>
   <div className="method-links">
     <a
@@ -59,9 +57,11 @@ Helius Labs maintains the canonical RPC API and indexer implementation. The foll
 </div>
 
 <div className="method-category">
-  <div className="category-header">
-    <h3>💰 Balance Methods</h3>
-    <p>Methods for checking compressed SOL and token balances</p>
+  <div className="category-header" style={{ marginBottom: "0.75rem" }}>
+    <h3 style={{ marginBottom: "0" }}>
+      <Icon icon="coins" size={20} style={{ marginRight: "8px" }} /> Balance
+      Methods
+    </h3>
   </div>
   <div className="method-links">
     <a
@@ -86,9 +86,11 @@ Helius Labs maintains the canonical RPC API and indexer implementation. The foll
 </div>
 
 <div className="method-category">
-  <div className="category-header">
-    <h3>🪙 Token Account Methods</h3>
-    <p>Methods for compressed token accounts</p>
+  <div className="category-header" style={{ marginBottom: "0.75rem" }}>
+    <h3 style={{ marginBottom: "0" }}>
+      <Icon icon="credit-card" size={20} style={{ marginRight: "8px" }} /> Token
+      Account Methods
+    </h3>
   </div>
   <div className="method-links">
     <a
@@ -140,9 +142,11 @@ Helius Labs maintains the canonical RPC API and indexer implementation. The foll
 </div>
 
 <div className="method-category">
-  <div className="category-header">
-    <h3>🛡️ Proof Methods</h3>
-    <p>Methods for Merkle proofs and validity checks</p>
+  <div className="category-header" style={{ marginBottom: "0.75rem" }}>
+    <h3 style={{ marginBottom: "0" }}>
+      <Icon icon="shield" size={20} style={{ marginRight: "8px" }} /> Proof
+      Methods
+    </h3>
   </div>
   <div className="method-links">
     <a
@@ -183,11 +187,22 @@ Helius Labs maintains the canonical RPC API and indexer implementation. The foll
 </div>
 
 <div className="method-category">
-  <div className="category-header">
-    <h3>✍️ Signature Methods</h3>
-    <p>Methods for compression signatures</p>
+  <div className="category-header" style={{ marginBottom: "0.75rem" }}>
+    <h3 style={{ marginBottom: "0" }}>
+      <Icon icon="pen" size={20} style={{ marginRight: "8px" }} /> Signature
+      Methods
+    </h3>
   </div>
   <div className="method-links">
+    <a
+      href="/api-reference/json-rpc-methods/getTransactionWithCompressionInfo"
+      className="method-link"
+    >
+      <span className="method-name">getTransactionWithCompressionInfo</span>
+      <span className="method-desc">
+        Get transaction details with compression-specific information
+      </span>
+    </a>
     <a
       href="/api-reference/json-rpc-methods/getCompressionSignaturesForAccount"
       className="method-link"
@@ -241,28 +256,12 @@ Helius Labs maintains the canonical RPC API and indexer implementation. The foll
   </div>
 </div>
 
-<div className="method-category method-transaction">
-  <div className="category-header">
-    <h3>🔄 Transaction Methods</h3>
-    <p>Methods for compression transaction information</p>
-  </div>
-  <div className="method-links">
-    <a
-      href="/api-reference/json-rpc-methods/getTransactionWithCompressionInfo"
-      className="method-link"
-    >
-      <span className="method-name">getTransactionWithCompressionInfo</span>
-      <span className="method-desc">
-        Get transaction details with compression-specific information
-      </span>
-    </a>
-  </div>
-</div>
-
 <div className="method-category method-indexer">
-  <div className="category-header">
-    <h3>🖥️ Indexer Methods</h3>
-    <p>Methods for indexer status and health</p>
+  <div className="category-header" style={{ marginBottom: "0.75rem" }}>
+    <h3 style={{ marginBottom: "0" }}>
+      <Icon icon="search" size={20} style={{ marginRight: "8px" }} /> Indexer
+      Methods
+    </h3>
   </div>
   <div className="method-links">
     <a

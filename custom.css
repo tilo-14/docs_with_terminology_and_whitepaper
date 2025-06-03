@@ -66,25 +66,25 @@
 .method-category:nth-child(4) {
   grid-column: 1;
   grid-row: 2;
-  margin-top: -10.25rem; /* Proof Methods: moved up 20px more */
+  margin-top: -10.6rem; /* Proof Methods: moved up 20px more */
 }
 
 .method-category:nth-child(5) {
   grid-column: 2;
   grid-row: 2;
-  margin-top: -13.9rem; /* Signature Methods: moved up 25px more */
+  margin-top: -15.7rem; /* Signature Methods: moved up 25px more */
 }
 
 .method-category.method-transaction {
   grid-column: 3;
   grid-row: 2;
-  margin-top: 1.5rem; /* Transaction Methods: moved down 10px */
+  margin-top: 1.2rem; /* Transaction Methods: moved down 10px */
 }
 
 .method-category.method-indexer {
   grid-column: 3;
   grid-row: 3;
-  margin-top: -8.2rem; /* Indexer Methods: moved up 50px more */
+  margin-top: -26.6rem; /* Indexer Methods: moved up 50px more */
 }
 
 .category-header {
