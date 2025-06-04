@@ -55,7 +55,6 @@
         "group": "Examples",
         "pages": [
           "examples/airdrop",
-          "examples/user-data",
           "examples/wallet-support",
           "examples/program-template"
         ]

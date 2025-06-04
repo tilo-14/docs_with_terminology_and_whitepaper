@@ -3,7 +3,30 @@ title: "In a Nutshell"
 description: "Quick overview of ZK Compression key concepts and resources"
 ---
 
-A concise overview of the most important concepts and resources for understanding ZK Compression.
+**In a Nutshell**
+
+**System Overview:**
+
+- State stored as calldata on Solana's ledger, minimizing rent costs.
+- Transactions explicitly declare accessed state within their payloads.
+
+**State Validation:**
+
+- Solana programs call Light Protocol to manage compressed state.
+- Protocol ensures validity, ownership, and correct sums.
+- Compressed accounts follow a defined schema, similar to classic accounts.
+
+**State Updates:**
+
+- Updated states logged directly to the Solana ledger after each instruction.
+
+**Photon RPC Nodes:**
+
+- Index ledger logs, providing compressed state via the ZK Compression RPC API.
+
+**Forester (Keeper) Nodes:**
+
+- Regularly process queues and manage state tree rollovers through the Account Compression Program.
 
 ### Key Concepts
 
