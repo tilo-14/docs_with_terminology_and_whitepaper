@@ -1,39 +1,19 @@
 ---
 title: "In a Nutshell"
-description: "Quick overview of ZK Compression key concepts and resources"
 ---
 
-**In a Nutshell**
+1. **State is stored directly as call data on Solana’s ledger, greatly reducing rent costs.**
 
-**System Overview:**
+2. **Transactions explicitly declare which state they read or modify within their payloads.**
 
-- State stored as calldata on Solana's ledger, minimizing rent costs.
-- Transactions explicitly declare accessed state within their payloads.
+3. **Solana programs invoke the Light Protocol System Program to perform state updates and compression.**
 
-**State Validation:**
+4. **The protocol rigorously validates state integrity, including sum checks, ownership verification, and consistency of existing data.**
 
-- Solana programs call Light Protocol to manage compressed state.
-- Protocol ensures validity, ownership, and correct sums.
-- Compressed accounts follow a defined schema, similar to classic accounts.
+5. **Classic accounts are transitioned to compressed accounts, maintaining a familiar account structure and layout.**
 
-**State Updates:**
+6. **Each instruction's resulting state changes are transparently logged on Solana’s ledger.**
 
-- Updated states logged directly to the Solana ledger after each instruction.
+7. **Photon RPC Nodes index these state logs, providing clients efficient access through the ZK Compression RPC API.**
 
-**Photon RPC Nodes:**
-
-- Index ledger logs, providing compressed state via the ZK Compression RPC API.
-
-**Forester (Keeper) Nodes:**
-
-- Regularly process queues and manage state tree rollovers through the Account Compression Program.
-
-### Key Concepts
-
-Brief explanations of the core concepts you need to know.
-
-### Quick Links
-
-Essential resources and next steps for your ZK Compression journey.
-
-Coming soon...
+8. **Forester Nodes (Keeper Nodes) continuously manage and optimize the system by emptying queues and rolling over state trees.**
