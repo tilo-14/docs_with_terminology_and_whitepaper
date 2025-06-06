@@ -14,7 +14,7 @@
 
   function isJsonRpcGroupHeader(element) {
     const text = element.textContent?.trim();
-    return text && text.includes("JSON RPC Methods") && text.length < 50;
+    return text && text === "JSON RPC Methods";
   }
 
   function handleJsonRpcClick(event) {

@@ -16,9 +16,31 @@
         "pages": ["overview", "introduction/quickstart", "introduction/faq"]
       },
       {
-        "group": "Core",
+        "group": "Products",
         "pages": [
-          "integrate/typescript-client",
+          {
+            "group": "Compressed Tokens",
+            "pages": [
+              "products/compressed-tokens/overview",
+              "products/compressed-tokens/create-airdrops"
+            ]
+          },
+          {
+            "group": "Compressed PDAs",
+            "pages": [
+              "products/compressed-pdas/overview",
+              "products/compressed-pdas/program-template"
+            ]
+          }
+        ]
+      },
+      {
+        "group": "Resources",
+        "pages": [
+          {
+            "group": "SDK",
+            "pages": ["integrate/typescript-client", "integrate/rust-client"]
+          },
           {
             "group": "JSON RPC Methods",
             "pages": [
@@ -47,16 +69,16 @@
               "api-reference/json-rpc-methods/getIndexerHealth"
             ]
           },
-          "integrate/addresses-and-urls",
-          "integrate/token-metadata"
+          "integrate/addresses-and-urls"
         ]
       },
       {
-        "group": "Examples",
+        "group": "Guides",
         "pages": [
-          "examples/airdrop",
-          "examples/wallet-support",
-          "examples/program-template"
+          "examples/create-airdrops",
+          "examples/wallet-integration",
+          "examples/program-template",
+          "integrate/token-metadata"
         ]
       },
       {

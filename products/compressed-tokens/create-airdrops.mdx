@@ -1,0 +1,48 @@
+# Create Airdrops with Compressed Tokens
+
+Learn how to create efficient and cost-effective airdrops using compressed tokens in ZK Compression.
+
+## Overview
+
+Compressed tokens enable you to create airdrops that are significantly more cost-effective than traditional Solana token airdrops, while maintaining the same functionality and user experience.
+
+## Benefits of Compressed Token Airdrops
+
+- **Cost Reduction**: Up to 99% reduction in airdrop costs compared to traditional tokens
+- **Scalability**: Distribute to thousands of recipients without hitting network limits
+- **Instant Distribution**: Batch multiple recipients in single transactions
+- **Gas Efficiency**: Minimal on-chain footprint per recipient
+
+## Implementation Guide
+
+### Prerequisites
+
+- ZK Compression SDK installed
+- Solana wallet with sufficient funds
+- List of recipient addresses
+
+### Basic Airdrop Setup
+
+```typescript
+import { createAirdrop } from "@lightprotocol/zk-compression";
+
+// Configure your airdrop parameters
+const airdropConfig = {
+  tokenMint: "your-compressed-token-mint",
+  recipients: recipientAddresses,
+  amountPerRecipient: 1000000, // 1 token (adjust for decimals)
+  merkleTree: "your-merkle-tree-address",
+};
+```
+
+### Advanced Features
+
+- **Batch Processing**: Process large recipient lists efficiently
+- **Conditional Airdrops**: Set conditions for token claiming
+- **Merkle Proofs**: Verify recipient eligibility off-chain
+
+## Next Steps
+
+- Check out our [SDK documentation](/integrate/typescript-client) for detailed implementation
+- Review [examples](/examples) for complete code samples
+- Join our [Discord](https://discord.gg/lightprotocol) for community support
