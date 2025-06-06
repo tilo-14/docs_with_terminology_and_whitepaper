@@ -1,0 +1,298 @@
+---
+title: "Add Support to Your Wallet"
+---
+
+## Overview
+
+Learn how to integrate compressed token (CToken) support into your Solana wallet application. This guide covers the essential steps to enable users to view, send, and receive compressed tokens seamlessly.
+
+## Prerequisites
+
+- Basic understanding of Solana wallet development
+- Familiarity with JavaScript/TypeScript
+- Access to ZK Compression RPC endpoints
+
+## Installation
+
+Install the required ZK Compression SDKs:
+
+```bash
+npm install @lightprotocol/stateless.js @lightprotocol/compressed-token
+```
+
+## Core Integration Steps
+
+### 1. Configure RPC Connection
+
+Set up a connection to a ZK Compression-enabled RPC endpoint:
+
+```typescript
+import { createRpc } from "@lightprotocol/stateless.js";
+
+const connection = createRpc(process.env.RPC_ENDPOINT, {
+  commitment: "confirmed",
+});
+```
+
+### 2. Fetch Compressed Token Balances
+
+Retrieve compressed token balances for a user's wallet:
+
+```typescript
+import { getCompressedTokenBalancesByOwner } from "@lightprotocol/stateless.js";
+
+async function getCompressedBalances(ownerPublicKey: PublicKey) {
+  const balances = await getCompressedTokenBalancesByOwner(
+    connection,
+    ownerPublicKey
+  );
+
+  return balances.map((balance) => ({
+    mint: balance.mint,
+    balance: balance.balance,
+    decimals: balance.decimals,
+  }));
+}
+```
+
+### 3. Display Compressed Tokens
+
+Create UI components to display compressed token balances:
+
+```typescript
+interface CompressedTokenDisplay {
+  mint: string;
+  symbol: string;
+  balance: number;
+  decimals: number;
+}
+
+function CompressedTokenList({ tokens }: { tokens: CompressedTokenDisplay[] }) {
+  return (
+    <div className="token-list">
+      {tokens.map((token) => (
+        <div key={token.mint} className="token-item">
+          <span className="token-symbol">{token.symbol}</span>
+          <span className="token-balance">
+            {(token.balance / Math.pow(10, token.decimals)).toFixed(2)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### 4. Implement Transfer Functionality
+
+Enable users to send compressed tokens:
+
+```typescript
+import { transfer } from "@lightprotocol/compressed-token";
+
+async function sendCompressedTokens(
+  mint: PublicKey,
+  amount: number,
+  recipient: PublicKey,
+  sender: Keypair
+) {
+  try {
+    const txId = await transfer(
+      connection,
+      sender,
+      mint,
+      amount,
+      sender, // from
+      recipient // to
+    );
+
+    console.log(`Transfer successful: ${txId}`);
+    return txId;
+  } catch (error) {
+    console.error("Transfer failed:", error);
+    throw error;
+  }
+}
+```
+
+### 5. Handle Compressed Token Receipts
+
+Process incoming compressed token transfers:
+
+```typescript
+async function checkForIncomingTransfers(userPublicKey: PublicKey) {
+  // Get recent compression signatures for the user
+  const signatures = await connection.getCompressionSignaturesForOwner(
+    userPublicKey,
+    { limit: 10 }
+  );
+
+  // Process each signature to update balances
+  for (const sig of signatures) {
+    // Fetch transaction details and update local state
+    const txInfo = await connection.getTransactionWithCompressionInfo(sig);
+    // Update UI with new balance information
+  }
+}
+```
+
+## Token Metadata Integration
+
+Fetch and display token metadata for better UX:
+
+```typescript
+import { getTokenMetadata } from "@lightprotocol/compressed-token";
+
+async function enrichTokensWithMetadata(tokens: any[]) {
+  return Promise.all(
+    tokens.map(async (token) => {
+      try {
+        const metadata = await getTokenMetadata(connection, token.mint);
+        return {
+          ...token,
+          name: metadata?.name || "Unknown Token",
+          symbol: metadata?.symbol || "UNK",
+          image: metadata?.image,
+        };
+      } catch (error) {
+        return {
+          ...token,
+          name: "Unknown Token",
+          symbol: "UNK",
+        };
+      }
+    })
+  );
+}
+```
+
+## Real-time Balance Updates
+
+Implement real-time balance updates using WebSocket connections:
+
+```typescript
+class CompressedTokenWatcher {
+  private connection: Connection;
+  private subscriptions: Map<string, number> = new Map();
+
+  constructor(connection: Connection) {
+    this.connection = connection;
+  }
+
+  watchBalance(
+    mint: PublicKey,
+    owner: PublicKey,
+    callback: (balance: number) => void
+  ) {
+    // Subscribe to balance changes
+    const subscriptionId = this.connection.onAccountChange(
+      owner,
+      (accountInfo) => {
+        // Process balance change
+        this.updateBalance(mint, owner, callback);
+      }
+    );
+
+    this.subscriptions.set(mint.toString(), subscriptionId);
+  }
+
+  private async updateBalance(
+    mint: PublicKey,
+    owner: PublicKey,
+    callback: (balance: number) => void
+  ) {
+    const balance = await getCompressedTokenBalance(
+      this.connection,
+      mint,
+      owner
+    );
+    callback(balance);
+  }
+}
+```
+
+## Error Handling Best Practices
+
+Implement robust error handling for compressed token operations:
+
+```typescript
+enum CompressedTokenError {
+  INSUFFICIENT_BALANCE = "INSUFFICIENT_BALANCE",
+  INVALID_RECIPIENT = "INVALID_RECIPIENT",
+  NETWORK_ERROR = "NETWORK_ERROR",
+  UNKNOWN_TOKEN = "UNKNOWN_TOKEN",
+}
+
+function handleCompressedTokenError(error: any): string {
+  if (error.message.includes("insufficient")) {
+    return "Insufficient compressed token balance";
+  }
+
+  if (error.message.includes("invalid")) {
+    return "Invalid recipient address";
+  }
+
+  return "Transaction failed. Please try again.";
+}
+```
+
+## Testing Your Integration
+
+### Unit Tests
+
+```typescript
+import { describe, it, expect } from "@jest/globals";
+
+describe("Compressed Token Integration", () => {
+  it("should fetch compressed token balances", async () => {
+    const balances = await getCompressedBalances(testPublicKey);
+    expect(Array.isArray(balances)).toBe(true);
+  });
+
+  it("should handle transfer errors gracefully", async () => {
+    try {
+      await sendCompressedTokens(
+        testMint,
+        999999999, // Large amount
+        recipient,
+        sender
+      );
+    } catch (error) {
+      expect(error).toBeDefined();
+    }
+  });
+});
+```
+
+## Security Considerations
+
+- **Input Validation**: Always validate recipient addresses and amounts
+- **Balance Verification**: Verify sufficient balance before attempting transfers
+- **Rate Limiting**: Implement rate limiting for API calls
+- **Error Logging**: Log errors for debugging but avoid exposing sensitive information
+
+## Performance Optimization
+
+- **Batch Operations**: Group multiple balance queries when possible
+- **Caching**: Cache token metadata to reduce API calls
+- **Pagination**: Implement pagination for large token lists
+- **Debouncing**: Debounce real-time updates to prevent excessive API calls
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Token Metadata"
+    icon="tags"
+    href="/products/compressed-tokens/token-metadata"
+  >
+    Learn how to handle token metadata in your wallet
+  </Card>
+  <Card
+    title="JSON RPC Methods"
+    icon="code"
+    href="/api-reference/json-rpc-methods/index"
+  >
+    Explore available RPC methods for compressed tokens
+  </Card>
+</CardGroup>{" "}

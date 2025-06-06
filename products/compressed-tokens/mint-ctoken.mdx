@@ -1,0 +1,98 @@
+---
+title: "Mint cToken"
+---
+
+## Overview
+
+Learn how to mint compressed tokens (ctokens) efficiently using ZK Compression. Compressed tokens provide the same functionality as regular SPL tokens but with significantly reduced state costs.
+
+## Prerequisites
+
+Before minting compressed tokens, ensure you have:
+
+- A funded Solana wallet
+- Access to a ZK Compression-enabled RPC endpoint
+- The necessary SDK packages installed
+
+## Installation
+
+Install the required packages:
+
+```bash
+npm install @lightprotocol/stateless.js @lightprotocol/compressed-token
+```
+
+## Minting Compressed Tokens
+
+### Basic Minting Example
+
+```typescript
+import { createRpc, confirmTx } from "@lightprotocol/stateless.js";
+import { mintTo } from "@lightprotocol/compressed-token";
+import { Keypair } from "@solana/web3.js";
+
+const connection = createRpc(process.env.RPC_ENDPOINT);
+const payer = Keypair.fromSecretKey(/* your keypair */);
+const mint = new PublicKey("your-mint-address");
+
+// Mint compressed tokens
+const txId = await mintTo(connection, payer, mint, recipient.publicKey, amount);
+
+console.log(`Minted compressed tokens: ${txId}`);
+```
+
+### Batch Minting
+
+For multiple recipients, you can batch mint operations:
+
+```typescript
+import { batchMintTo } from "@lightprotocol/compressed-token";
+
+const recipients = [
+  { publicKey: recipientA.publicKey, amount: 1000 },
+  { publicKey: recipientB.publicKey, amount: 2000 },
+  { publicKey: recipientC.publicKey, amount: 1500 },
+];
+
+const txId = await batchMintTo(connection, payer, mint, recipients);
+
+console.log(`Batch minted compressed tokens: ${txId}`);
+```
+
+## Token Pool Registration
+
+Before minting, ensure your token mint is registered with the compressed token program:
+
+```typescript
+import { createTokenPool } from "@lightprotocol/compressed-token";
+
+const txId = await createTokenPool(connection, payer, mint);
+
+console.log(`Token pool created: ${txId}`);
+```
+
+## Best Practices
+
+- **Gas Optimization**: Batch multiple mint operations when possible
+- **Error Handling**: Always implement proper error handling for transaction failures
+- **Balance Verification**: Verify compressed token balances after minting
+- **Rate Limiting**: Be mindful of RPC rate limits when batch processing
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Create Airdrops"
+    icon="parachute-box"
+    href="/products/compressed-tokens/create-airdrops"
+  >
+    Learn how to create efficient airdrops with compressed tokens
+  </Card>
+  <Card
+    title="Token Metadata"
+    icon="tags"
+    href="/products/compressed-tokens/token-metadata"
+  >
+    Add metadata to your compressed tokens
+  </Card>
+</CardGroup>{" "}

@@ -16,22 +16,20 @@
         "pages": ["overview", "introduction/quickstart", "introduction/faq"]
       },
       {
-        "group": "Products",
+        "group": "Compressed Tokens",
         "pages": [
-          {
-            "group": "Compressed Tokens",
-            "pages": [
-              "products/compressed-tokens/overview",
-              "products/compressed-tokens/create-airdrops"
-            ]
-          },
-          {
-            "group": "Compressed PDAs",
-            "pages": [
-              "products/compressed-pdas/overview",
-              "products/compressed-pdas/program-template"
-            ]
-          }
+          "products/compressed-tokens/overview",
+          "products/compressed-tokens/mint-ctoken",
+          "products/compressed-tokens/create-airdrops",
+          "products/compressed-tokens/token-metadata",
+          "products/compressed-tokens/add-support-to-your-wallet"
+        ]
+      },
+      {
+        "group": "Compressed PDAs",
+        "pages": [
+          "products/compressed-pdas/overview",
+          "products/compressed-pdas/program-template"
         ]
       },
       {
@@ -72,15 +70,7 @@
           "integrate/addresses-and-urls"
         ]
       },
-      {
-        "group": "Guides",
-        "pages": [
-          "examples/create-airdrops",
-          "examples/wallet-integration",
-          "examples/program-template",
-          "integrate/token-metadata"
-        ]
-      },
+
       {
         "group": "How it works",
         "pages": [
