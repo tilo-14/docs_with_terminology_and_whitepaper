@@ -10,76 +10,95 @@
   "favicon": "/favicon.svg",
   "customCSS": "/custom.css",
   "navigation": {
-    "groups": [
+    "anchors": [
       {
-        "group": "Introduction",
-        "pages": ["overview", "introduction/quickstart"]
-      },
-      {
-        "group": "Compressed Tokens",
-        "pages": [
-          "products/compressed-tokens/overview",
-          "products/compressed-tokens/mint-ctoken",
-          "products/compressed-tokens/create-airdrops",
-          "products/compressed-tokens/token-metadata",
-          "products/compressed-tokens/add-support-to-your-wallet"
-        ]
-      },
-      {
-        "group": "Compressed PDAs",
-        "pages": [
-          "products/compressed-pdas/overview",
-          "products/compressed-pdas/program-template"
-        ]
-      },
-      {
-        "group": "Resources",
-        "pages": [
+        "anchor": "Documentation",
+        "icon": "book-open",
+        "groups": [
           {
-            "group": "SDK",
-            "pages": ["integrate/typescript-client", "integrate/rust-client"]
+            "group": "Introduction",
+            "pages": ["overview", "introduction/quickstart"]
           },
           {
-            "group": "JSON RPC Methods",
+            "group": "Compressed Tokens",
             "pages": [
-              "api-reference/json-rpc-methods/index",
-              "api-reference/json-rpc-methods/getCompressedAccount",
-              "api-reference/json-rpc-methods/getCompressedAccountsByOwner",
-              "api-reference/json-rpc-methods/getMultipleCompressedAccounts",
-              "api-reference/json-rpc-methods/getCompressedBalance",
-              "api-reference/json-rpc-methods/getCompressedBalanceByOwner",
-              "api-reference/json-rpc-methods/getCompressedTokenAccountBalance",
-              "api-reference/json-rpc-methods/getCompressedMintTokenHolders",
-              "api-reference/json-rpc-methods/getCompressedTokenBalancesByOwnerV2",
-              "api-reference/json-rpc-methods/getCompressedTokenAccountsByOwner",
-              "api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate",
-              "api-reference/json-rpc-methods/getTransactionWithCompressionInfo",
-              "api-reference/json-rpc-methods/getCompressedAccountProof",
-              "api-reference/json-rpc-methods/getMultipleCompressedAccountProofs",
-              "api-reference/json-rpc-methods/getMultipleNewAddressProofs",
-              "api-reference/json-rpc-methods/getValidityProof",
-              "api-reference/json-rpc-methods/getCompressionSignaturesForAccount",
-              "api-reference/json-rpc-methods/getCompressionSignaturesForAddress",
-              "api-reference/json-rpc-methods/getCompressionSignaturesForOwner",
-              "api-reference/json-rpc-methods/getCompressionSignaturesForTokenOwner",
-              "api-reference/json-rpc-methods/getLatestCompressionSignatures",
-              "api-reference/json-rpc-methods/getIndexerSlot",
-              "api-reference/json-rpc-methods/getIndexerHealth"
+              "products/compressed-tokens/overview",
+              "products/compressed-tokens/mint-ctoken",
+              "products/compressed-tokens/create-airdrops",
+              "products/compressed-tokens/token-metadata",
+              "products/compressed-tokens/add-support-to-your-wallet"
             ]
           },
-          "integrate/addresses-and-urls",
           {
-            "group": "Learn How It Works",
+            "group": "Compressed PDAs",
             "pages": [
-              "learn-more/in-a-nutshell",
-              "learn-more/compressed-account-model",
-              "learn-more/state-trees",
-              "learn-more/validity-proofs",
-              "learn-more/lifecycle-of-a-transaction",
-              "learn-more/limitations"
+              "products/compressed-pdas/overview",
+              "products/compressed-pdas/program-template"
+            ]
+          },
+          {
+            "group": "Resources",
+            "pages": [
+              {
+                "group": "SDK",
+                "pages": [
+                  "integrate/typescript-client",
+                  "integrate/rust-client"
+                ]
+              },
+              {
+                "group": "JSON RPC Methods",
+                "pages": [
+                  "api-reference/json-rpc-methods/index",
+                  "api-reference/json-rpc-methods/getCompressedAccount",
+                  "api-reference/json-rpc-methods/getCompressedAccountsByOwner",
+                  "api-reference/json-rpc-methods/getMultipleCompressedAccounts",
+                  "api-reference/json-rpc-methods/getCompressedBalance",
+                  "api-reference/json-rpc-methods/getCompressedBalanceByOwner",
+                  "api-reference/json-rpc-methods/getCompressedTokenAccountBalance",
+                  "api-reference/json-rpc-methods/getCompressedMintTokenHolders",
+                  "api-reference/json-rpc-methods/getCompressedTokenBalancesByOwnerV2",
+                  "api-reference/json-rpc-methods/getCompressedTokenAccountsByOwner",
+                  "api-reference/json-rpc-methods/getCompressedTokenAccountsByDelegate",
+                  "api-reference/json-rpc-methods/getTransactionWithCompressionInfo",
+                  "api-reference/json-rpc-methods/getCompressedAccountProof",
+                  "api-reference/json-rpc-methods/getMultipleCompressedAccountProofs",
+                  "api-reference/json-rpc-methods/getMultipleNewAddressProofs",
+                  "api-reference/json-rpc-methods/getValidityProof",
+                  "api-reference/json-rpc-methods/getCompressionSignaturesForAccount",
+                  "api-reference/json-rpc-methods/getCompressionSignaturesForAddress",
+                  "api-reference/json-rpc-methods/getCompressionSignaturesForOwner",
+                  "api-reference/json-rpc-methods/getCompressionSignaturesForTokenOwner",
+                  "api-reference/json-rpc-methods/getLatestCompressionSignatures",
+                  "api-reference/json-rpc-methods/getIndexerSlot",
+                  "api-reference/json-rpc-methods/getIndexerHealth"
+                ]
+              },
+              "integrate/addresses-and-urls",
+              {
+                "group": "Learn",
+                "pages": [
+                  "learn-more/in-a-nutshell",
+                  "learn-more/compressed-account-model",
+                  "learn-more/state-trees",
+                  "learn-more/validity-proofs",
+                  "learn-more/lifecycle-of-a-transaction",
+                  "learn-more/limitations"
+                ]
+              }
             ]
           }
         ]
+      },
+      {
+        "anchor": "Changelog",
+        "icon": "clock-rotate-left",
+        "pages": ["changelog"]
+      },
+      {
+        "anchor": "Support",
+        "icon": "headset",
+        "pages": ["support"]
       }
     ]
   },
