@@ -4,7 +4,7 @@ title: "Overview"
 
 ZK Compression is Solana's state compression primitive that uses zero-knowledge proofs to compress account data into Merkle trees, reducing on-chain storage costs by up to 5,000x while maintaining security, composability, and Solana's performance.
 
-<CardGroup cols={2}>
+<CardGroup cols={3}>
   <Card title="Quickstart" icon="rocket" href="/introduction/quickstart">
     Get started with ZK Compression in minutes. Install dependencies and create
     your first compressed account.
@@ -13,11 +13,68 @@ ZK Compression is Solana's state compression primitive that uses zero-knowledge 
     Learn about the core concepts and mechanisms behind ZK Compression
     technology.
   </Card>
-  <Card title="Examples" icon="code" href="/examples/airdrop">
+  <Card
+    title="Examples"
+    icon="code"
+    href="/products/compressed-tokens/create-airdrops"
+  >
     Explore practical examples and implementations to get started quickly.
   </Card>
-  <Card title="FAQ" icon="circle-question" href="/introduction/faq">
-    Find answers to common questions about ZK Compression and troubleshooting
-    tips.
+</CardGroup>
+
+## FAQ
+
+<AccordionGroup>
+  <Accordion title="What problem does it solve?">
+    zkCompression solves the expensive rent problem on Solana. Each token account costs ~0.002 SOL in rent, which becomes prohibitively expensive at scale. zkCompression eliminates this cost entirely by storing account data off-chain while maintaining security through state commitments on Solana L1.
+  </Accordion>
+
+  <Accordion title="How much money does it save me?">
+    Typical savings: **1,000x–5,000x cheaper** per account.
+
+    Creating 100 token accounts the normal way costs ~0.2 SOL. With zkCompression, it's ~0.00004 SOL.
+
+  </Accordion>
+
+{" "}
+
+<Accordion title="Who is this for?">
+  zkCompression is perfect for: - **Airdrop Tools**: Apps that need to create
+  thousands of token accounts for mass distributions - **Consumer Apps**:
+  Applications doing reward distribution or gamified tokens - **DePIN
+  Protocols**: Protocols managing long-tail devices/users at scale -
+  **Infrastructure Providers**: Providers who want to offer rent-free state to
+  users - **Any Scalable App**: Any application needing scalable, low-cost
+  account creation
+</Accordion>
+
+{" "}
+
+<Accordion title="Is this an L2?">
+  **No.** Everything runs on Solana L1. zkCompression simply lets you treat
+  Solana as a state root layer while keeping the actual data off-chain.
+</Accordion>
+
+  <Accordion title="Where is the data stored?">
+    Compressed data is stored off-chain in a distributed network of RPC providers, with state commitments anchored on Solana L1. This ensures data availability while dramatically reducing costs.
+  </Accordion>
+</AccordionGroup>
+
+## Need More Help?
+
+<CardGroup cols={2}>
+  <Card
+    title="Discord Community"
+    icon="discord"
+    href="https://discord.gg/lightprotocol"
+  >
+    Join our Discord for real-time support and discussions
+  </Card>
+  <Card
+    title="GitHub Issues"
+    icon="github"
+    href="https://github.com/Lightprotocol/light-protocol"
+  >
+    Report bugs or request features on GitHub
   </Card>
 </CardGroup>

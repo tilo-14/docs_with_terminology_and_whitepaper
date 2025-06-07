@@ -13,7 +13,7 @@
     "groups": [
       {
         "group": "Introduction",
-        "pages": ["overview", "introduction/quickstart", "introduction/faq"]
+        "pages": ["overview", "introduction/quickstart"]
       },
       {
         "group": "Compressed Tokens",
@@ -67,17 +67,11 @@
               "api-reference/json-rpc-methods/getIndexerHealth"
             ]
           },
-          "integrate/addresses-and-urls"
-        ]
-      },
-
-      {
-        "group": "How it works",
-        "pages": [
-          "learn-more/in-a-nutshell",
+          "integrate/addresses-and-urls",
           {
-            "group": "Deep Dive",
+            "group": "Learn How It Works",
             "pages": [
+              "learn-more/in-a-nutshell",
               "learn-more/compressed-account-model",
               "learn-more/state-trees",
               "learn-more/validity-proofs",
