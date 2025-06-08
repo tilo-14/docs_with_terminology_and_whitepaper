@@ -103,6 +103,11 @@
         "label": "Discord",
         "href": "https://discord.gg/lightprotocol",
         "icon": "discord"
+      },
+      {
+        "label": "Changelog",
+        "href": "https://github.com/Lightprotocol/light-protocol/releases",
+        "icon": "book"
       }
     ]
   },
