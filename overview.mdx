@@ -1,8 +1,9 @@
 ---
 title: "Overview"
+sidebarTitle: "Overview"
 ---
 
-ZK Compression is Solana's state compression primitive that uses zero-knowledge proofs to compress account data into Merkle trees, reducing on-chain storage costs by up to 5,000x while maintaining security, composability, and Solana's performance.
+ZK Compression is a new primitive on Solana that drastically reduces your on-chain costs by up to 5000x for token accounts and 160x for PDAs, while maintaining full Solana security, performance, and composability.
 
 <CardGroup cols={3}>
   <Card title="Quickstart" icon="rocket" href="/introduction/quickstart">
@@ -29,12 +30,16 @@ ZK Compression is Solana's state compression primitive that uses zero-knowledge 
     zkCompression solves the expensive rent problem on Solana. Each token account costs ~0.002 SOL in rent, which becomes prohibitively expensive at scale. zkCompression eliminates this cost entirely by storing account data off-chain while maintaining security through state commitments on Solana L1.
   </Accordion>
 
-  <Accordion title="How much money does it save me?">
-    Typical savings: **1,000x–5,000x cheaper** per account.
+{" "}
 
-    Creating 100 token accounts the normal way costs ~0.2 SOL. With zkCompression, it's ~0.00004 SOL.
-
-  </Accordion>
+<Accordion title="How much money does it save me?">
+  <video
+    controls
+    className="w-full rounded-lg"
+    style={{ maxHeight: "400px" }}
+    src="/videos/pricesavings.mov"
+  />
+</Accordion>
 
 {" "}
 

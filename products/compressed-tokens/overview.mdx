@@ -1,18 +1,84 @@
-# Compressed Tokens Overview
+---
+title: "Overview"
+sidebarTitle: "Overview"
+---
 
-Welcome to the Compressed Tokens section. This page provides an overview of compressed tokens in ZK Compression.
+Compressed tokens are SPL-compatible tokens that store their state in Solana's cheaper ledger space instead of expensive account space. They work exactly like regular SPL tokens but cost significantly less to create and manage.
 
-## What are Compressed Tokens?
+## Key Benefits
 
-Compressed tokens are a key component of ZK Compression that enable efficient token operations while maintaining security and verifiability.
+<CardGroup cols={2}>
+<Card title="Massive Cost Savings" icon="dollar-sign">
+Create millions of token accounts for the price of hundreds with regular SPL tokens.
+</Card>
 
-## Key Features
+<Card title="Full SPL Compatibility" icon="handshake">
+  Compressed tokens follow the SPL token standard and work with existing Solana
+  programs.
+</Card>
 
-- **Efficiency**: Reduced on-chain storage requirements
-- **Cost-effective**: Lower transaction fees
-- **Scalability**: Handle more transactions with less resources
-- **Compatibility**: Works with existing Solana token standards
+<Card title="Wallet Support" icon="wallet">
+  Supported natively by major wallets including Phantom, Backpack, and others.
+</Card>
+
+<Card title="Atomic Conversion" icon="arrows-rotate">
+Seamlessly compress and decompress between regular and compressed tokens in a single transaction.
+</Card>
+</CardGroup>
+
+<Tip>
+  **Perfect for Airdrops**: Distribute tokens to thousands of users at minimal
+  cost - ideal for rewards programs and marketing campaigns.
+</Tip>
+
+## Common Use Cases
+
+<AccordionGroup>
+<Accordion title="Airdrops & Rewards">
+Distribute tokens to large audiences cost-effectively. Perfect for marketing campaigns, community rewards, and user acquisition programs where you need to reach thousands of users without breaking the budget.
+</Accordion>
+
+<Accordion title="Gaming Tokens">
+  Create in-game currencies and collectibles without breaking the bank. Ideal
+  for web3 games that need to mint thousands of tokens for player rewards,
+  achievements, and virtual economies.
+</Accordion>
+
+<Accordion title="Social Tokens">
+  Issue community tokens and reputation systems affordably. Build tokenized
+  communities where members can earn and trade social tokens based on
+  participation and contributions.
+</Accordion>
+
+<Accordion title="Loyalty Programs">
+Build point systems and membership tokens efficiently. Create scalable loyalty programs for businesses that need to issue tokens to large customer bases.
+</Accordion>
+</AccordionGroup>
 
 ## Getting Started
 
-Learn more about implementing compressed tokens in your applications through our SDK documentation and examples.
+<CardGroup cols={2}>
+<Card title="Quickstart" icon="rocket" href="/introduction/quickstart">
+Get started with ZK Compression in minutes and create your first compressed tokens
+</Card>
+
+<Card
+  title="Create Airdrops"
+  icon="parachute-box"
+  href="/products/compressed-tokens/create-airdrops"
+>
+  Learn how to distribute compressed tokens to thousands of users
+</Card>
+
+<Card
+  title="Token Metadata"
+  icon="tag"
+  href="/products/compressed-tokens/token-metadata"
+>
+  Add metadata and rich information to your compressed tokens
+</Card>
+
+<Card title="SDK Integration" icon="code" href="/integrate/typescript-client">
+Start building with our TypeScript and Rust SDKs
+</Card>
+</CardGroup>
