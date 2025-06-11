@@ -1,261 +1,401 @@
 ---
 title: "Quickstart"
 sidebarTitle: "Quickstart"
-description: "Get your development environment ready for ZK Compression and run your first airdrop"
+description: "Get started with this quick demo"
 ---
-
 <Steps>
-  <Step title="Install Dependencies">
-    Install the ZK Compression CLI and required SDKs:
+  <Step title="Initialize Your Project">
+    Create a new Node.js project for compressed tokens:
 
     ```bash
-    npm install -g @lightprotocol/zk-compression-cli && \
-    npm install --save \
-        @lightprotocol/stateless.js \
-        @lightprotocol/compressed-token \
-        @solana/web3.js \
-        @solana/spl-token \
-        bs58 \
-        dotenv
+    mkdir compressed-token-quickstart
+    cd compressed-token-quickstart
+    npm init -y
+    ```
+
+    Update your `package.json` to use ES modules:
+
+    ```json package.json
+    {
+      "name": "compressed-token-quickstart",
+      "version": "1.0.0",
+      "type": "module",
+      "main": "index.js",
+      "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+      },
+      "keywords": [],
+      "author": "",
+      "license": "ISC",
+      "description": ""
+    }
     ```
 
   </Step>
 
-  <Step title="Set Up Environment Variables">
-    Create a `.env` file in your project root:
+  <Step title="Install Dependencies">
+    Install the compressed token SDK and required dependencies:
 
     ```bash
-    # Helius RPC endpoint (supports ZK Compression)
-    RPC_ENDPOINT="https://devnet.helius-rpc.com?api-key=<your_api_key>"
+    npm install @lightprotocol/compressed-token@^0.21.0 \
+                @lightprotocol/stateless.js@^0.21.0 \
+                @solana/spl-token@^0.4.13 \
+                @solana/web3.js@^1.98.2 \
+                dotenv@^16.5.0
+    ```
 
-    # Your wallet keypair (base58 encoded)
-    PAYER_KEYPAIR="your_base58_encoded_private_key"
+  </Step>
+
+  <Step title="Set Up Environment">
+    Create a `.env` file for your Helius API key:
+
+    ```bash .env
+    HELIUS_API_KEY=your_api_key_here
     ```
 
     <Note>
-      Get a free Helius API key at [helius.xyz](https://helius.xyz) for devnet access.
+      Get a free Helius API key at [helius.xyz](https://helius.xyz). Helius provides the RPC infrastructure needed for compressed tokens on devnet.
     </Note>
 
   </Step>
 
-  <Step title="Create RPC Connection">
-    Set up your connection to the ZK Compression network:
+  <Step title="Create the Demo Script">
+    Create `quickstart.js` and paste the complete demo code:
 
-    ```typescript
-    import { createRpc, Rpc } from "@lightprotocol/stateless.js";
-    import { Keypair } from "@solana/web3.js";
-    import bs58 from "bs58";
+    ```javascript quickstart.js
+    import { createRpc, confirmTx } from "@lightprotocol/stateless.js";
+    import { createTokenPool, compress } from "@lightprotocol/compressed-token";
+    import {
+      Keypair,
+      PublicKey,
+      LAMPORTS_PER_SOL,
+      SystemProgram,
+      Transaction,
+    } from "@solana/web3.js";
+    import {
+      createMint,
+      getOrCreateAssociatedTokenAccount,
+      mintTo,
+    } from "@solana/spl-token";
+    import { writeFileSync } from "fs";
     import dotenv from "dotenv";
 
     dotenv.config();
 
-    // Helius exposes Solana and Photon RPC endpoints through a single URL
-    const RPC_ENDPOINT = process.env.RPC_ENDPOINT!;
-    const connection: Rpc = createRpc(RPC_ENDPOINT, RPC_ENDPOINT, RPC_ENDPOINT);
+    // Setup RPC connections
+    const heliusConnection = createRpc(
+      `https://devnet.helius-rpc.com?api-key=${process.env.HELIUS_API_KEY}`,
+      `https://devnet.helius-rpc.com?api-key=${process.env.HELIUS_API_KEY}`
+    );
 
-    // Load your keypair
-    const payer = Keypair.fromSecretKey(bs58.decode(process.env.PAYER_KEYPAIR!));
+    // ANSI color codes for better visual hierarchy
+    const colors = {
+      reset: "\x1b[0m",
+      bright: "\x1b[1m",
+      dim: "\x1b[2m",
+      green: "\x1b[32m",
+      yellow: "\x1b[33m",
+      blue: "\x1b[34m",
+      red: "\x1b[31m",
+      cyan: "\x1b[36m",
+    };
 
-    console.log("✅ Connected to ZK Compression network");
+    // Spinner frames for smooth animation
+    const spinnerFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
+    function saveWalletToFile(keypair, filename) {
+      const walletData = {
+        publicKey: keypair.publicKey.toBase58(),
+        secretKey: Array.from(keypair.secretKey),
+      };
+
+      writeFileSync(filename, JSON.stringify(walletData, null, 2));
+      return filename;
+    }
+
+    function truncateKey(key, showChars = 4) {
+      return `${key.slice(0, showChars)}...${key.slice(-showChars)}`;
+    }
+
+    class Spinner {
+      constructor(message) {
+        this.message = message;
+        this.frameIndex = 0;
+        this.interval = null;
+      }
+
+      start() {
+        this.interval = setInterval(() => {
+          process.stdout.write(
+            `\r${colors.blue}${spinnerFrames[this.frameIndex]}${colors.reset} ${
+              this.message
+            }`
+          );
+          this.frameIndex = (this.frameIndex + 1) % spinnerFrames.length;
+        }, 80);
+      }
+
+      stop(success = true) {
+        clearInterval(this.interval);
+        const symbol = success
+          ? `${colors.green}✓${colors.reset}`
+          : `${colors.red}✗${colors.reset}`;
+        process.stdout.write(`\r${symbol} ${this.message}\n`);
+      }
+
+      update(message) {
+        this.message = message;
+      }
+    }
+
+    async function waitForFunding(publicKey) {
+      const spinner = new Spinner("Waiting for wallet funding");
+      spinner.start();
+
+      while (true) {
+        try {
+          const balance = await heliusConnection.getBalance(publicKey);
+          if (balance >= 0.01 * LAMPORTS_PER_SOL) {
+            spinner.stop(true);
+            return balance / LAMPORTS_PER_SOL;
+          }
+        } catch (error) {
+          // Continue waiting
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+      }
+    }
+
+    function printHeader() {
+      console.clear();
+      console.log(
+        `${colors.bright}${colors.cyan}Compressed Token Demo${colors.reset}`
+      );
+      console.log(`${colors.dim}${"─".repeat(50)}${colors.reset}\n`);
+    }
+
+    function printStep(step, total, description) {
+      console.log(`${colors.dim}[${step}/${total}]${colors.reset} ${description}`);
+    }
+
+    function printSuccess(message) {
+      console.log(`${colors.green}✓${colors.reset} ${message}`);
+    }
+
+    function printError(message) {
+      console.log(`${colors.red}✗${colors.reset} ${message}`);
+    }
+
+    function printInfo(label, value, indent = false) {
+      const prefix = indent ? "  " : "";
+      console.log(`${prefix}${colors.dim}${label}:${colors.reset} ${value}`);
+    }
+
+    async function main() {
+      printHeader();
+
+      // Check API key
+      if (!process.env.HELIUS_API_KEY) {
+        printError("HELIUS_API_KEY not found in .env file");
+        console.log(`\n${colors.dim}Add your Helius API key to .env:`);
+        console.log(`HELIUS_API_KEY=your_api_key_here${colors.reset}`);
+        return;
+      }
+
+      try {
+        // Step 1: Generate wallets
+        printStep(1, 5, "Generating wallets");
+        const payerWallet = Keypair.generate();
+        const recipientWallet = Keypair.generate();
+
+        saveWalletToFile(payerWallet, "payer-wallet.txt");
+        saveWalletToFile(recipientWallet, "recipient-wallet.txt");
+
+        printInfo("Payer", truncateKey(payerWallet.publicKey.toBase58()), true);
+        printInfo(
+          "Recipient",
+          truncateKey(recipientWallet.publicKey.toBase58()),
+          true
+        );
+        printSuccess("Wallets generated\n");
+
+        // Step 2: Fund wallet
+        printStep(2, 5, "Fund your wallet");
+        console.log(
+          `\n${colors.bright}${payerWallet.publicKey.toBase58()}${colors.reset}`
+        );
+        console.log(
+          `\n${colors.dim}Visit: https://faucet.solana.com/${colors.reset}\n`
+        );
+
+        const balance = await waitForFunding(payerWallet.publicKey);
+        printInfo("Balance", `${balance.toFixed(4)} SOL`, true);
+        console.log();
+
+        // Step 3: Create SPL mint and register for compression
+        printStep(3, 5, "Creating SPL token mint");
+        const mintSpinner = new Spinner("Creating mint...");
+        mintSpinner.start();
+
+        const mint = await createMint(
+          heliusConnection,
+          payerWallet,
+          payerWallet.publicKey,
+          null,
+          9
+        );
+
+        // Register mint for compression
+        await createTokenPool(heliusConnection, payerWallet, mint);
+
+        mintSpinner.stop();
+        printInfo("Mint", truncateKey(mint.toBase58(), 6), true);
+        printSuccess("Mint created and registered for compression\n");
+
+        // Step 4: Create recipient's token account and mint SPL tokens
+        printStep(4, 5, "Minting SPL tokens to recipient");
+        const splMintSpinner = new Spinner("Creating token account and minting...");
+        splMintSpinner.start();
+
+        // Create recipient's ATA
+        const recipientAta = await getOrCreateAssociatedTokenAccount(
+          heliusConnection,
+          payerWallet,
+          mint,
+          recipientWallet.publicKey
+        );
+
+        // Mint SPL tokens to recipient
+        const mintAmount = 1000 * 1e9;
+        await mintTo(
+          heliusConnection,
+          payerWallet,
+          mint,
+          recipientAta.address,
+          payerWallet,
+          mintAmount
+        );
+
+        splMintSpinner.stop();
+        printSuccess("SPL tokens minted to recipient\n");
+
+        // Step 5: Compress the SPL tokens
+        printStep(5, 5, "Compressing SPL tokens");
+        const compressSpinner = new Spinner("Converting to compressed tokens...");
+        compressSpinner.start();
+
+        const compressTxId = await compress(
+          heliusConnection,
+          payerWallet,
+          mint,
+          mintAmount,
+          recipientWallet, // Owner of the tokens
+          recipientAta.address, // Source ATA
+          recipientWallet.publicKey // Destination for compressed tokens
+        );
+
+        compressSpinner.stop();
+        printSuccess("Tokens compressed\n");
+
+        // Optional: Send some SOL to recipient
+        const solTransferAmount = 0.01 * LAMPORTS_PER_SOL;
+        const solTransferInstruction = SystemProgram.transfer({
+          fromPubkey: payerWallet.publicKey,
+          toPubkey: recipientWallet.publicKey,
+          lamports: solTransferAmount,
+        });
+
+        const solTransaction = new Transaction().add(solTransferInstruction);
+        await heliusConnection.sendTransaction(solTransaction, [payerWallet]);
+
+        // Summary
+        console.log(`${colors.bright}Summary${colors.reset}`);
+        console.log(`${colors.dim}${"─".repeat(50)}${colors.reset}`);
+        printInfo("Created SPL mint", truncateKey(mint.toBase58(), 6));
+        printInfo("Minted SPL tokens", "1000 tokens");
+        printInfo("Compressed tokens", "1000 tokens to recipient");
+        printInfo("Cost saved", "~0.002 SOL (no token account rent)");
+
+        console.log(`\n${colors.bright}View on Explorer${colors.reset}`);
+        console.log(
+          `${colors.blue}https://photon.helius.dev/tx/${compressTxId}?cluster=devnet${colors.reset}\n`
+        );
+      } catch (error) {
+        printError(`Transaction failed: ${error.message}`);
+        console.log(
+          `\n${colors.dim}Check your API key and network connection${colors.reset}`
+        );
+      }
+    }
+
+    main().catch(console.error);
     ```
+
+  </Step>
+
+  <Step title="Run the Demo">
+    ```bash
+    node quickstart.js
+    ```
+
+    <Info>
+      The demo will pause and display a wallet address. Visit [faucet.solana.com](https://faucet.solana.com) to fund it with devnet SOL, then watch the magic happen!
+    </Info>
+
+    <Steps titleSize="h4">
+      <Step title="Wallet Generation">
+        Creates fresh keypairs and saves them to local files for reference
+      </Step>
+      <Step title="Network Funding">
+        Waits for you to fund the payer wallet via Solana faucet
+      </Step>
+      <Step title="Token Infrastructure">
+        Creates an SPL mint and registers it in Light Protocol's compression registry
+      </Step>
+      <Step title="Token Minting & Compression">
+        Mints regular SPL tokens, then converts them to compressed format, eliminating account rent
+      </Step>
+    </Steps>
 
   </Step>
 </Steps>
 
 ---
 
-## Your First Compressed Token Airdrop
+## What You Just Experienced
 
-Let's create and distribute compressed SPL tokens to multiple wallets.
-
-<Steps>
-  <Step title="Create and Fund Your Mint">
-    First, create an SPL token mint and register it for compression:
-
-    ```typescript
-    import { createMint, getOrCreateAssociatedTokenAccount, mintTo } from "@solana/spl-token";
-    import { createTokenPool } from '@lightprotocol/compressed-token';
-    import { confirmTx } from "@lightprotocol/stateless.js";
-
-    async function setupMint() {
-      // Airdrop SOL for transaction fees
-      await confirmTx(
-        connection,
-        await connection.requestAirdrop(payer.publicKey, 10e9)
-      );
-
-      // Create SPL token mint
-      const mint = await createMint(
-        connection,
-        payer,
-        payer.publicKey,
-        null,
-        9 // decimals
-      );
-      console.log(`✅ Created mint: ${mint}`);
-
-      // Register mint for compression
-      const poolTxId = await createTokenPool(connection, payer, mint);
-      console.log(`✅ Registered for compression: ${poolTxId}`);
-
-      // Create token account and mint initial supply
-      const ata = await getOrCreateAssociatedTokenAccount(
-        connection,
-        payer,
-        mint,
-        payer.publicKey
-      );
-
-      const mintToTxId = await mintTo(
-        connection,
-        payer,
-        mint,
-        ata.address,
-        payer.publicKey,
-        1e9 * 1e9 // 1 billion tokens
-      );
-      console.log(`✅ Minted tokens: ${mintToTxId}`);
-
-      return { mint, ata };
-    }
-    ```
-
-  </Step>
-
-  <Step title="Prepare Airdrop Recipients">
-    Define your airdrop recipients and amounts:
-
-    ```typescript
-    // Example recipient wallets (replace with real addresses)
-    const airdropRecipients = [
-      "11111111111111111111111111111112",
-      "22222222222222222222222222222222",
-      "33333333333333333333333333333333",
-      "44444444444444444444444444444444",
-      "55555555555555555555555555555555"
-    ].map(address => new PublicKey(address));
-
-    // Amount to send to each recipient (in token base units)
-    const amountPerRecipient = bn(1000 * 1e9); // 1000 tokens
-    ```
-
-  </Step>
-
-  <Step title="Execute the Airdrop">
-    Compress and distribute tokens to all recipients in a single transaction:
-
-    ```typescript
-    import {
-      CompressedTokenProgram,
-      getTokenPoolInfos,
-      selectTokenPoolInfo
-    } from "@lightprotocol/compressed-token";
-    import {
-      buildAndSignTx,
-      calculateComputeUnitPrice,
-      selectStateTreeInfo,
-      sendAndConfirmTx,
-      dedupeSigner,
-      bn
-    } from "@lightprotocol/stateless.js";
-    import { ComputeBudgetProgram } from "@solana/web3.js";
-
-    async function executeAirdrop(mint: PublicKey, sourceAta: any) {
-      // Select compression infrastructure
-      const activeStateTrees = await connection.getStateTreeInfos();
-      const treeInfo = selectStateTreeInfo(activeStateTrees);
-
-      const tokenPoolInfos = await getTokenPoolInfos(connection, mint);
-      const tokenPoolInfo = selectTokenPoolInfo(tokenPoolInfos);
-
-      // Build transaction
-      const instructions = [];
-
-      // Set compute budget (120k CU per recipient)
-      instructions.push(
-        ComputeBudgetProgram.setComputeUnitLimit({
-          units: 120_000 * airdropRecipients.length
-        }),
-        ComputeBudgetProgram.setComputeUnitPrice({
-          microLamports: calculateComputeUnitPrice(20_000, 120_000)
-        })
-      );
-
-      // Create compress instruction
-      const compressInstruction = await CompressedTokenProgram.compress({
-        payer: payer.publicKey,
-        owner: payer.publicKey,
-        source: sourceAta.address,
-        toAddress: airdropRecipients,
-        amount: airdropRecipients.map(() => amountPerRecipient),
-        mint,
-        tokenPoolInfo,
-        outputStateTreeInfo: treeInfo,
-      });
-
-      instructions.push(compressInstruction);
-
-      // Sign and send transaction
-      const additionalSigners = dedupeSigner(payer, [payer]);
-      const { blockhash } = await connection.getLatestBlockhash();
-      const tx = buildAndSignTx(instructions, payer, blockhash, additionalSigners);
-
-      const txId = await sendAndConfirmTx(connection, tx);
-      console.log(`🎉 Airdrop successful! Transaction: ${txId}`);
-
-      return txId;
-    }
-    ```
-
-  </Step>
-
-  <Step title="Run the Complete Airdrop">
-    Put it all together:
-
-    ```typescript
-    async function runAirdrop() {
-      try {
-        console.log("🚀 Starting compressed token airdrop...");
-
-        // Setup mint and initial tokens
-        const { mint, ata } = await setupMint();
-
-        // Execute the airdrop
-        const txId = await executeAirdrop(mint, ata);
-
-        console.log(`✅ Successfully airdropped tokens to ${airdropRecipients.length} wallets`);
-        console.log(`💰 Total cost: ~${airdropRecipients.length * 0.000005} SOL`);
-        console.log(`🔗 Transaction: https://explorer.solana.com/tx/${txId}?cluster=devnet`);
-
-      } catch (error) {
-        console.error("❌ Airdrop failed:", error);
-      }
-    }
-
-    // Run the airdrop
-    runAirdrop();
-    ```
-
-  </Step>
-</Steps>
-
-**You've successfully:**
-
-- Set up your ZK Compression development environment
-- Created a compressed SPL token
-- Executed a cost-efficient airdrop to multiple wallets
-
-## What's Next?
-
-<CardGroup cols={2}>
-  <Card title="Build Programs" href="/developers/programs" icon="code">
-    Learn to build on-chain programs with ZK Compression
+<CardGroup cols={3}>
+  <Card title="Cost Savings" icon="piggy-bank">
+    ~0.002 SOL saved per recipient - no token account rent required for
+    compressed tokens
   </Card>
+  <Card title="Instant Setup" icon="bolt">
+    Zero infrastructure overhead - no merkle tree management or complex setup
+    needed
+  </Card>
+  <Card title="Full SPL Compatibility" icon="arrows-rotate">
+    Works with existing SPL tokens - convert any SPL token to compressed format
+  </Card>
+</CardGroup>
+
+## Next Steps
+
+<CardGroup cols={3}>
   <Card
-    title="Advanced Airdrops"
-    href="/developers/airdrops"
+    title="Create Airdrops"
+    href="/developers/mass-airdrops"
     icon="parachute-box"
   >
-    Scale to thousands of recipients efficiently
+    Scale to thousands of recipients efficiently with batch operations
+  </Card>
+  <Card title="Build Custom Programs" href="/developers/programs" icon="code">
+    Integrate compressed tokens into your own Solana programs
+  </Card>
+  <Card
+    title="Learn the Internals"
+    href="/developers/how-it-works"
+    icon="gears"
+  >
+    Understand merkle proofs, state trees, and compression mechanics
   </Card>
 </CardGroup>
